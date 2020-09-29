@@ -42,7 +42,7 @@ teamWins(TEAM, RACE) :-
 
 % 2a) won(X, porto).
 % 2b) teamWins(X, porto).
-% 2c) pilot(X), won(X, RACE1), won(X, RACE2), RACE1 \= RACE2.
+% 2c) pilot(X), won(X, RACE1), won(X, RACE2), RACE1 @< RACE2.
 % 2d) circuit(X), gates(X, Y), Y>8.
 % 2e) pilot(X), plane(X, MODEL), MODEL \= edge540.
 

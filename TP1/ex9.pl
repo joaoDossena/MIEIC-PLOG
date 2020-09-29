@@ -16,21 +16,32 @@ funcionario(ana_paula, feup).
 funcionario(carlos, feup).
 
 
+alunoDe(ALUNO, PROF) :- 
+	aluno(ALUNO, CADEIRA),
+	professor(PROF, CADEIRA),
+	frequenta(ALUNO, UNI),
+	funcionario(PROF, UNI).
+
+frequentaUniversidade(PESSOA, UNI) :-
+	frequenta(PESSOA, X).
+frequentaUniversidade(PESSOA, UNI) :-
+	funcionario(PESSOA, X).
+
 colega(X, Y) :-
 	aluno(X, CADEIRA),
 	aluno(Y, CADEIRA),
-	X \= Y;
-
+	X \= Y.
+colega(X, Y) :-
 	frequenta(X, UNI),
 	frequenta(Y, UNI),
-	X \= Y;
-
+	X \= Y.
+colega(X, Y) :-
 	funcionario(X, UNI),
 	funcionario(Y, UNI),
 	X \= Y.
 
 	
 
-% 9a) aluno(Y, CADEIRA), professor(X, CADEIRA).
-% 9b) frequenta(ALUNO, X); funcionario(PROF, X).
+% 9a) alunoDe(ALUNO, PROF).
+% 9b) 
 % 9c) colega(X, Y).
