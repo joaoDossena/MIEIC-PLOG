@@ -9,6 +9,7 @@ valor(uno, 7000).
 
 
 pode_vender(PESSOA, CARRO, ANO_ATUAL) :-
+	comprou(PESSOA, CARRO),
 	ano(CARRO, ANO_COMPRA),
 	(ANO_ATUAL - ANO_COMPRA =< 10),
 	valor(CARRO, VALOR),
