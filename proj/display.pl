@@ -1,9 +1,9 @@
 initialBoard([
-	[empty, empty, empty, empty, white],
 	[empty, empty, empty, empty, empty],
 	[empty, empty, empty, empty, empty],
 	[empty, empty, empty, empty, empty],
-	[black, empty, empty, empty, empty]
+	[empty, empty, empty, empty, empty],
+	[empty, empty, empty, empty, empty]
 	]).
 
 
