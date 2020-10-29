@@ -6,15 +6,15 @@ mainMenu :-
 
 % Manage Input
 manageInput(1) :-
-    %startGame  %player vs player
+    startGame('Person', 'Person'),  %player vs player
     mainMenu.
 
 manageInput(2) :-
-    %startGame  %player vs computer
+    startGame('Person', 'Computer'),  %player vs computer
     mainMenu.
 
 manageInput(3) :-
-    %startGame  %computer vs computer
+    startGame('Computer', 'Computer'),  %computer vs computer
     mainMenu.
 
 manageInput(0) :-
@@ -55,7 +55,7 @@ printMainMenu :-
     write('|                          0. Exit                                      |'),nl,
     write('|                                                                       |'),nl,
     write('|                                                                       |'),nl,
-    write(' _______________________________________________________________________ '),nl,nl,nl.
+    write(' _______________________________________________________________________ '),nl,nl.
 
 askMenuOption :-
     write('> Insert your option ').

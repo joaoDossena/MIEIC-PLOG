@@ -1,11 +1,11 @@
-initialBoard([
-	[empty, empty, empty, empty, empty],
-	[empty, empty, empty, empty, empty],
-	[empty, empty, empty, empty, empty],
-	[empty, empty, empty, empty, empty],
-	[empty, empty, empty, empty, empty]
-	]).
 
+initialBoard([
+	[[empty], [empty], [empty], [empty], [black, black, black, black, black, black]],
+	[[empty], [empty], [empty], [empty], [empty]],
+	[[empty], [empty], [empty], [empty], [empty]],
+	[[empty], [empty], [empty], [empty], [empty]],
+	[[white, white, white, white, white, white], [empty], [empty], [empty], [empty]],
+	]).
 
 
 symbol(empty, '.').
@@ -27,7 +27,7 @@ printBoard(X) :-
     write('---|---|---|---|---|---|\n'),
     printMatrix(X, 1).
 
-printMatrix([], 6). %Talvez mudemos pra 5
+printMatrix([], 5). %Talvez mudemos pra 5
 
 printMatrix([Head|Tail], N) :-
     letter(N, L),
@@ -36,7 +36,7 @@ printMatrix([Head|Tail], N) :-
     N1 is N + 1,
     write(' | '),
     printLine(Head),
-    write('\n---|---|---|---|---|---|---|\n'),
+    write('\n---|---|---|---|---|---|\n'),
     printMatrix(Tail, N1).
 
 printLine([]).
