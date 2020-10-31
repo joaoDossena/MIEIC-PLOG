@@ -5,11 +5,10 @@
 :- consult('logic.pl').
 
 
-nava :-
-	mainMenu.
+% nava :-
+%  	mainMenu.
+
 
 play :- 
-	initialBoard(InitialBoard),
-	initialWhiteCubes(WhiteCubeList),
-	initialBlackCubes(BlackCubeList),
-	display_game(GameState, Player).
+	initial(GameState),
+	display_game(GameState, white).
