@@ -27,7 +27,22 @@ Há duas formas de se ganhar: obtendo-se controlo de todas as pilhas adversária
 - [Livro de regras](./Nava_Final_Rule_Sheet_-_David_Cordell.pdf)
 
 ### Representação interna do estado do jogo
+No tabuleiro inicial estarão os dois jogadores com as pilhas de 6 discos em cantos opostos. Seus cubos estarão fora do tabuleiro
 
+O predicado initialBoard/1 recebe uma lista (matriz) de listas (linhas) de listas (pilhas). Ele representa a configuração inicial do tabuleiro:
+
+	initialBoard([
+		[[empty], [empty], [empty], [empty], [black, black, black, black, black, black]],
+		[[empty], [empty], [empty], [empty], [empty]],
+		[[empty], [empty], [empty], [empty], [empty]],
+		[[empty], [empty], [empty], [empty], [empty]],
+		[[white, white, white, white, white, white], [empty], [empty], [empty], [empty]]
+	]).
+
+Os predicados initialWhiteCubes/1 e initialBlackCubes/1 representam, respectivamente, os cubos brancos e pretos fora do tabuleiro, ou seja, a configuração inicial dos cubos:
+
+	initialWhiteCubes([whiteCube, whiteCube, whiteCube, whiteCube, whiteCube, whiteCube, whiteCube, whiteCube, whiteCube]).
+	initialBlackCubes([blackCube, blackCube, blackCube, blackCube, blackCube, blackCube, blackCube, blackCube, blackCube]).
 
 ### Visualização do estado de jogo
 
