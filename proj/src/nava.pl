@@ -7,3 +7,9 @@
 
 nava :-
 	mainMenu.
+
+play :- 
+	initialBoard(InitialBoard),
+	initialWhiteCubes(WhiteCubeList),
+	initialBlackCubes(BlackCubeList),
+	display_game(GameState, Player).
