@@ -1,10 +1,10 @@
 # Relatório Intercalar
 ## MIEIC-PLOG
 
-João Pedro Olinto Dossena (UP201800174) 
-João Francisco Ribeiro dos Santos (UP201707427) 
-Turma: 7 
-Grupo: Nava_3 
+João Pedro Olinto Dossena (UP201800174)  
+João Francisco Ribeiro dos Santos (UP201707427)  
+Turma: 7  
+Grupo: Nava_3  
 
 ## Nava
 
