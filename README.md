@@ -1,2 +1,5 @@
 # MIEIC-PLOG
-Activities done for subject of Programming in Logic @FEUP
+Activities done for the subject of Programming in Logic
+
+## Assignment 1 - Nava
+
