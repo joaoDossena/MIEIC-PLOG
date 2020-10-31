@@ -27,9 +27,11 @@ Há duas formas de se ganhar: obtendo-se controlo de todas as pilhas adversária
 - [Livro de regras](./Nava_Final_Rule_Sheet_-_David_Cordell.pdf)
 
 ### Representação interna do estado do jogo
+
+#### Estado Inicial
 No tabuleiro inicial estarão os dois jogadores com as pilhas de 6 discos em cantos opostos. Seus cubos estarão fora do tabuleiro
 
-O predicado initialBoard/1 recebe uma lista (matriz) de listas (linhas) de listas (pilhas). Ele representa a configuração inicial do tabuleiro:
+O predicado initialBoard/1 possui uma lista (matriz) de listas (linhas) de listas (pilhas). Ele representa a configuração inicial do tabuleiro:
 
 	initialBoard([
 		[[empty], [empty], [empty], [empty], [black, black, black, black, black, black]],
@@ -43,6 +45,40 @@ Os predicados initialWhiteCubes/1 e initialBlackCubes/1 representam, respectivam
 
 	initialWhiteCubes([whiteCube, whiteCube, whiteCube, whiteCube, whiteCube, whiteCube, whiteCube, whiteCube, whiteCube]).
 	initialBlackCubes([blackCube, blackCube, blackCube, blackCube, blackCube, blackCube, blackCube, blackCube, blackCube]).
+
+#### Estado Intermédio
+O predicado midBoard/1 é análogo ao initialBoard/1, porém representa um determinado tabuleiro ao meio do jogo:
+
+	midBoard([
+    [[black, black],        [empty], [blackCube],    [empty],               [black, black, black, black]],
+    [[empty],               [empty], [empty],        [white, white, white], [empty]],
+    [[empty],               [empty], [empty],        [empty],               [empty]],
+    [[empty],               [empty], [empty],        [empty],               [empty]],
+    [[white, white, white], [empty], [empty],        [whiteCube],           [empty]]
+    ]).
+
+Analogamente temos os predicados midWhiteCubes/1 e midBlackCubes/1, que representam os cubos fora do tabuleiro ao meio do jogo:
+
+	midWhiteCubes([whiteCube, whiteCube, whiteCube, whiteCube, whiteCube, whiteCube, whiteCube, whiteCube]).
+	midBlackCubes([blackCube, blackCube, blackCube, blackCube, blackCube, blackCube, blackCube, blackCube]).
+
+
+#### Estado Final
+O predicado finalBoard/1 representa um determinado fim de jogo, no qual o jogador de peças brancas ganha por tomar o controlo de todas as pilhas do jogo:
+
+	finalBoard([
+    [[blackCube], [white, black, white, black], [blackCube],    [whiteCube],           [white, black, black, black, black]],
+    [[whiteCube], [whiteCube],                  [empty],        [white, white],        [white, black]],
+    [[empty],     [empty],                      [empty],        [empty],               [empty]],
+    [[empty],     [empty],                      [empty],        [empty],               [empty]],
+    [[whiteCube], [empty],                      [empty],        [whiteCube],           [empty]]
+    ]).
+
+Temos também os predicados finalWhiteCubes/1 e finalBlackCubes/1, representando os cubos que sobraram fora do tabuleiro ao final do jogo:
+
+	finalWhiteCubes([whiteCube, whiteCube, whiteCube, whiteCube]).
+	finalBlackCubes([blackCube, blackCube, blackCube, blackCube, blackCube, blackCube, blackCube]).
+
 
 ### Visualização do estado de jogo
 
