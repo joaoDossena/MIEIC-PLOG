@@ -10,7 +10,7 @@ Grupo: Nava_3
 
 ### Descrição do Jogo
 #### Início
-Estamos a implementar a versão de 2 jogadores de Nava. Um dos jogadores terá peças brancas (o primeiro a jogar), e o outro terá peças pretas. Ambos começam com uma pilha de 6 peças redondas em cantos opostos de um tabuleiro 5x5, e com 9 peças cúbicas fora do tabuleiro.
+Estamos a implementar a versão de 2 jogadores de Nava, adaptando o tabuleiro para casas por simplicidade. Um dos jogadores terá peças brancas (o primeiro a jogar), e o outro terá peças pretas. Ambos começam com uma pilha de 6 peças redondas em cantos opostos de um tabuleiro 5x5, e com 9 peças cúbicas fora do tabuleiro.
 #### Jogadas
 A cada jogada, o jogador deverá retirar um número X de seus discos do topo de uma das suas pilhas, e movê-los em linha reta (sem ser diagonal), colocando essa subpilha a X casas de distância (sendo X limitado pelo número de casas no tabuleiro, e pelo número de peças na pilha).
 #### Pilhas
@@ -22,3 +22,6 @@ Se um jogador colocar uma pilha numa casa onde há um cubo, ele deverá devolver
 #### Término do jogo
 Há duas formas de se ganhar: obtendo-se controlo de todas as pilhas adversárias, ou colocando-se no tabuleiro todos os seus 9 cubos. 
 
+##### Mais informações
+- [Página oficial do jogo](https://boardgamegeek.com/boardgame/250491/nava)  
+- [Livro de regras](./Nava_Final_Rule_Sheet_-_David_Cordell.pdf)
