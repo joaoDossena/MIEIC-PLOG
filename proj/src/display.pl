@@ -1,3 +1,6 @@
+% Makes initial state of the game
+initial(GameState).
+
 % Initial configuration of board
 initialBoard([
 	[[empty], [empty], [empty], [empty], [black, black, black, black, black, black]],
@@ -74,8 +77,13 @@ printMatrix([Head|Tail], N) :-
 
 % Prints a line
 printLine([]).
-printLine([Head|Tail]) :-
-    symbol(Head, S),
-    write(S),
+printLine([Stack|RestOfLine]) :-
+    printTop(Stack),
     write(' | '),
-    printLine(Tail).
+    printLine(RestOfLine).
+
+% Prints top of the stack
+printTop([]).
+printTop([TopOfStack|RestOfStack]) :-
+    symbol(TopOfStack, S),
+    write(S).
