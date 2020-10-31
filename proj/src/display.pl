@@ -92,6 +92,7 @@ printTop([TopOfStack|_RestOfStack]) :-
     symbol(TopOfStack, S),
     write(S).
 
+printCubes([]).
 printCubes(WhiteCubeList, BlackCubeList) :-
     write('White cubes left: '),
     printList(WhiteCubeList),nl,
