@@ -25,3 +25,9 @@ Há duas formas de se ganhar: obtendo-se controlo de todas as pilhas adversária
 ##### Mais informações
 - [Página oficial do jogo](https://boardgamegeek.com/boardgame/250491/nava)  
 - [Livro de regras](./Nava_Final_Rule_Sheet_-_David_Cordell.pdf)
+
+### Representação interna do estado do jogo
+
+
+### Visualização do estado de jogo
+
