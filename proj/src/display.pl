@@ -1,5 +1,3 @@
-% Makes initial state of the game
-initial(GameState).
 
 % Initial configuration of board
 initialBoard([
@@ -55,12 +53,18 @@ letter(3, 'C').
 letter(4, 'D').
 letter(5, 'E').
 
-% Prints game board X
-printBoard(X) :-
+
+display_game([Board, WhiteCubeList, BlackCubeList], Player) :-
+    write('Turn: '), write(Player), nl,
+    printBoard(Board),
+    printCubes(WhiteCubeList, BlackCubeList).
+
+% Prints game board Board
+printBoard(Board) :-
     nl,
     write('   | 1 | 2 | 3 | 4 | 5 | \n'),
     write('---|---|---|---|---|---|\n'),
-    printMatrix(X, 1).
+    printMatrix(Board, 1).
 
 
 % Prints matrix
@@ -84,6 +88,19 @@ printLine([Stack|RestOfLine]) :-
 
 % Prints top of the stack
 printTop([]).
-printTop([TopOfStack|RestOfStack]) :-
+printTop([TopOfStack|_RestOfStack]) :-
     symbol(TopOfStack, S),
     write(S).
+
+printCubes(WhiteCubeList, BlackCubeList) :-
+    write('White cubes left: '),
+    printList(WhiteCubeList),nl,
+    write('Black cubes left: '),
+    printList(BlackCubeList).
+
+printList([]).
+printList([Head|Tail]) :-
+    symbol(Head, S),
+    write(S),
+    printList(Tail).
+
