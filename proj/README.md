@@ -8,6 +8,12 @@ Grupo: Nava_3
 
 ## Nava
 
+### Instruções de execução
+1. Abrir o terminal com o SICSTUS instalado
+2. Executar o comando "sicstus"
+3. Executar o comando " ['nava.pl']. " ou "consult('nava.pl')."
+4. Executar o predicado "play."
+
 ### Descrição do Jogo
 #### Início
 Estamos a implementar a versão de 2 jogadores de Nava, adaptando o tabuleiro para casas por simplicidade. Um dos jogadores terá peças brancas (o primeiro a jogar), e o outro terá peças pretas. Ambos começam com uma pilha de 6 peças redondas em cantos opostos de um tabuleiro 5x5, e com 9 peças cúbicas fora do tabuleiro.
