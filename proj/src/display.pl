@@ -55,9 +55,10 @@ letter(5, 'E').
 
 
 display_game([Board, WhiteCubeList, BlackCubeList], Player) :-
-    write('Turn: '), write(Player), nl,
+    write('Turn: '), write(Player),
     printBoard(Board),
     printCubes(WhiteCubeList, BlackCubeList).
+
 
 % Prints game board Board
 printBoard(Board) :-
@@ -68,7 +69,7 @@ printBoard(Board) :-
 
 
 % Prints matrix
-printMatrix([], 5).
+printMatrix([], 6).
 printMatrix([Head|Tail], N) :-
     letter(N, L),
     write(' '),
@@ -92,12 +93,12 @@ printTop([TopOfStack|_RestOfStack]) :-
     symbol(TopOfStack, S),
     write(S).
 
-printCubes([]).
+%printCubes([], []).
 printCubes(WhiteCubeList, BlackCubeList) :-
     write('White cubes left: '),
     printList(WhiteCubeList),nl,
     write('Black cubes left: '),
-    printList(BlackCubeList).
+    printList(BlackCubeList),nl.
 
 printList([]).
 printList([Head|Tail]) :-

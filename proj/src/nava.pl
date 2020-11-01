@@ -5,10 +5,11 @@
 :- consult('logic.pl').
 
 
-% nava :-
-%  	mainMenu.
+nava :-
+  	mainMenu.
 
-
+% Initial function to start game
+% play/0
 play :- 
 	initial(GameState),
 	display_game(GameState, white).
