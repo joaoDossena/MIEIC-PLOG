@@ -1,10 +1,13 @@
+% Shows main menu 
+% mainMenu/0
 mainMenu :-
     printMainMenu,
     askMenuOption,
     read(Input),
     manageInput(Input).
 
-% Manage Input
+% Manages Input
+% manageInput(+Input)
 manageInput(1) :-
     startGame('Person', 'Person'),  %player vs player
     mainMenu.
@@ -29,6 +32,8 @@ manageInput(_Other) :-
 
 
 
+% Prints main menu 
+% printMainMenu/0
 printMainMenu :-
     nl,nl,
     write(' _______________________________________________________________________ '),nl,
@@ -57,6 +62,8 @@ printMainMenu :-
     write('|                                                                       |'),nl,
     write(' _______________________________________________________________________ '),nl,nl.
 
+% Asks for menu option
+% askMenuOption/0
 askMenuOption :-
     write('> Insert your option ').
                                 

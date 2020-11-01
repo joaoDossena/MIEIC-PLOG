@@ -39,13 +39,15 @@ initial([Board, WhiteCubeList, BlackCubeList]) :-
     initialWhiteCubes(WhiteCubeList),
     initialBlackCubes(BlackCubeList).
 
-% Gets intermediate state of the game
+% Gets specific intermediate state of the game
 % intermediate(-GameState)
 intermediate([Board, WhiteCubeList, BlackCubeList]) :-
       midBoard(Board),
       midWhiteCubes(WhiteCubeList),
       midBlackCubes(BlackCubeList).
 
+% Gets specific final state of the game
+% final(-GameState)
 final([Board, WhiteCubeList, BlackCubeList]) :-
       finalBoard(Board),
       finalWhiteCubes(WhiteCubeList),
