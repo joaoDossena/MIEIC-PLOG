@@ -2,55 +2,55 @@
 % Initial configuration of board
 % initialBoard(+Board)
 initialBoard([
-	[[empty], [empty], [empty], [empty], [black, black, black, black, black, black]],
-	[[empty], [empty], [empty], [empty], [empty]],
-	[[empty], [empty], [empty], [empty], [empty]],
-	[[empty], [empty], [empty], [empty], [empty]],
-	[[white, white, white, white, white, white], [empty], [empty], [empty], [empty]]
+	[[], [], [], [], [black, black, black, black, black, black]],
+	[[], [], [], [], []],
+	[[], [], [], [], []],
+	[[], [], [], [], []],
+	[[white, white, white, white, white, white], [], [], [], []]
 	]).
 
 % Initial configuration of cubes out of the board
-% initialWhiteCubes(+List)
-initialWhiteCubes([whiteCube, whiteCube, whiteCube, whiteCube, whiteCube, whiteCube, whiteCube, whiteCube, whiteCube]).
-% initialBlackCubes(+List)
-initialBlackCubes([blackCube, blackCube, blackCube, blackCube, blackCube, blackCube, blackCube, blackCube, blackCube]).
+% initialWhiteCubes(+Number)
+initialWhiteCubes(9).
+% initialBlackCubes(+Number)
+initialBlackCubes(9).
 
 
 % Example of intermediate configuration of board
 % midBoard(+Board)
 midBoard([
-    [[black, black],        [empty], [blackCube],    [empty],               [black, black, black, black]],
-    [[empty],               [empty], [empty],        [white, white, white], [empty]],
-    [[empty],               [empty], [empty],        [empty],               [empty]],
-    [[empty],               [empty], [empty],        [empty],               [empty]],
-    [[white, white, white], [empty], [empty],        [whiteCube],           [empty]]
+    [[black, black],        [], [blackCube],    [],               [black, black, black, black]],
+    [[],               [], [],        [white, white, white], []],
+    [[],               [], [],        [],               []],
+    [[],               [], [],        [],               []],
+    [[white, white, white], [], [],        [whiteCube],           []]
     ]).
 
 % Example of intermediate configuration of cubes out of the board
-% midWhiteCubes(+List)
-midWhiteCubes([whiteCube, whiteCube, whiteCube, whiteCube, whiteCube, whiteCube, whiteCube, whiteCube]).
-% midBlackCubes(+List)
-midBlackCubes([blackCube, blackCube, blackCube, blackCube, blackCube, blackCube, blackCube, blackCube]).
+% midWhiteCubes(+Number)
+midWhiteCubes(8).
+% midBlackCubes(+Number)
+midBlackCubes(8).
 
 % Example of final configuration of board
 % finalBoard(+Board)
 finalBoard([
     [[blackCube], [white, black, white, black], [blackCube],    [whiteCube],           [white, black, black, black, black]],
-    [[whiteCube], [whiteCube],                  [empty],        [white, white],        [white, black]],
-    [[empty],     [empty],                      [empty],        [empty],               [empty]],
-    [[empty],     [empty],                      [empty],        [empty],               [empty]],
-    [[whiteCube], [empty],                      [empty],        [whiteCube],           [empty]]
+    [[whiteCube], [whiteCube],                  [],        [white, white],        [white, black]],
+    [[],     [],                      [],        [],               []],
+    [[],     [],                      [],        [],               []],
+    [[whiteCube], [],                      [],        [whiteCube],           []]
     ]).
 
 % Example of final configuration of cubes out of the board
-% finalWhiteCubes(+List)
-finalWhiteCubes([whiteCube, whiteCube, whiteCube, whiteCube]).
-% finalBlackCubes(+List)
-finalBlackCubes([blackCube, blackCube, blackCube, blackCube, blackCube, blackCube, blackCube]).
+% finalWhiteCubes(+Number)
+finalWhiteCubes(4).
+% finalBlackCubes(+Number)
+finalBlackCubes(7).
 
 % Symbols and what they represent
 % symbol(+Alias, +Character)
-symbol(empty, '.').
+symbol([], '.').
 symbol(black, 'B').
 symbol(blackCube, 'C').
 symbol(white, 'W').
