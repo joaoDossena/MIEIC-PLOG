@@ -10,6 +10,8 @@ Grupo: Nava_3
 
 
 # MUDAR OS + e os - !!!!!!!!!!!
+# MUDAR REPRESENTAÇÃO DAS PILHAS
+# FAZER FUNÇÃO DISPLAY_GAME MAIS GENÉRICA
 
 ### Instruções de execução
 1. Abrir o terminal com o SICSTUS instalado
