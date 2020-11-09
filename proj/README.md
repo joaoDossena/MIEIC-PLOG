@@ -12,6 +12,7 @@ Grupo: Nava_3
 # MUDAR OS + e os - !!!!!!!!!!!
 # MUDAR REPRESENTAÇÃO DAS PILHAS
 # FAZER FUNÇÃO DISPLAY_GAME MAIS GENÉRICA
+# MUDAR FOTOS DAS REPRESENTAÇÕES, APÓS MUDÁ-LAS
 
 ### Instruções de execução
 1. Abrir o terminal com o SICSTUS instalado
@@ -42,7 +43,7 @@ Há duas formas de se ganhar: obtendo-se controlo de todas as pilhas adversária
 #### Estado Inicial
 No tabuleiro inicial estarão os dois jogadores com as pilhas de 6 discos em cantos opostos. Seus cubos estarão fora do tabuleiro
 
-O predicado initialBoard/1 possui uma lista (matriz) de listas (linhas) de listas (pilhas). Ele representa a configuração inicial do tabuleiro:
+O predicado initialBoard/1 representa a configuração inicial do tabuleiro:
 
 	initialBoard([
 		[[], [], [], [], [black, black, black, black, black, black]],
@@ -52,20 +53,22 @@ O predicado initialBoard/1 possui uma lista (matriz) de listas (linhas) de lista
 		[[white, white, white, white, white, white], [], [], [], []]
 	]).
 
-Os predicados initialWhiteCubes/1 e initialBlackCubes/1 representam, respectivamente, os cubos brancos e pretos fora do tabuleiro, ou seja, a configuração inicial dos cubos:
+Os predicados initialWhiteCubes/1 e initialBlackCubes/1 representam a configuração inicial dos cubos:
 
 	initialWhiteCubes(9).
 	initialBlackCubes(9).
+
+![inicial](./imgs/initial.png "Estado Inicial")
 
 #### Estado Intermédio
 O predicado midBoard/1 é análogo ao initialBoard/1, porém representa um determinado tabuleiro ao meio do jogo:
 
 	midBoard([
-    [[black, black],        [], [blackCube], [],                  [black, black, black, black]],
-    [[],                    [], [],         [white, white, white], [],
-    [[],                    [], [],          [],                  [],
-    [[],                    [], [],          [],                  [],
-    [[white, white, white], [], [[]],        [whiteCube],       	  []
+    [[black, black],        [], [blackCube], [],                    [black, black, black, black]],
+    [[],                    [], [],          [white, white, white], [],
+    [[],                    [], [],          [],                    [],
+    [[],                    [], [],          [],                    [],
+    [[white, white, white], [], [],        [whiteCube],       	[]
     ]).
 
 Analogamente temos os predicados midWhiteCubes/1 e midBlackCubes/1, que representam os cubos fora do tabuleiro ao meio do jogo:
@@ -73,16 +76,18 @@ Analogamente temos os predicados midWhiteCubes/1 e midBlackCubes/1, que represen
 	midWhiteCubes(8).
 	midBlackCubes(8).
 
+![intermediário](./imgs/intermediate.png "Estado Intermediário")
+
 
 #### Estado Final
 O predicado finalBoard/1 representa um determinado fim de jogo, no qual o jogador de peças brancas ganha por tomar o controlo de todas as pilhas do jogo:
 
 	finalBoard([
-    [[blackCube], [white, black, white, black], [blackCube],   [whiteCube],           [white, black, black, black, black]],
-    [[whiteCube], [whiteCube],                  [],            [white, white],                             [white, black]],
-    [[],          [],                           [],            [],                                                     []],
-    [[],          [],                           [],            [],                                                     []],
-    [[whiteCube], [],                           [],            [whiteCube],                                            []]
+    [[blackCube], [white, black, white, black], [blackCube],   [whiteCube],   [white, black, black, black, black]],
+    [[whiteCube], [whiteCube],                  [],            [white, white],                     [white, black]],
+    [[],          [],                           [],            [],                                             []],
+    [[],          [],                           [],            [],                                             []],
+    [[whiteCube], [],                           [],            [whiteCube],                                    []]
     ]).
 
 Temos também os predicados finalWhiteCubes/1 e finalBlackCubes/1, representando os cubos que sobraram fora do tabuleiro ao final do jogo:
@@ -90,17 +95,8 @@ Temos também os predicados finalWhiteCubes/1 e finalBlackCubes/1, representando
 	finalWhiteCubes(4).
 	finalBlackCubes(7).
 
-
-### Visualização do estado de jogo
-O predicado play/0 chama os predicados initial(+GameState), que inicializa o tabuleiro e as listas de cubos fora do tabuleiro, e display_game(-GameState, -Player), que, por sua vez, chama printBoard(-Board) e printCubes(-WhiteCubeList, -BlackCubeList). O predicado printBoard/1 imprime no ecrã o tabuleiro com o topo de cada stack ('W' para branco e 'B' para preto), bem como os cubos que estejam no tabuleiro ('K' para branco e 'C' para preto). O predicado printCubes/2 imprime no ecrã os cubos não usados.
-
-#### Exemplos
-
-##### Estado Inicial
-![inicial](./imgs/initial.png "Estado Inicial")
-##### Estado Intermediário
-![intermediário](./imgs/intermediate.png "Estado Intermediário")
-##### Estado Final
 ![final](./imgs/final.png "Estado Final")
 
 
+### Visualização do estado de jogo
+O predicado play/0 chama os predicados initial(+GameState), que inicializa o tabuleiro e as listas de cubos fora do tabuleiro, e display_game(-GameState, -Player), que, por sua vez, chama printBoard(-Board) e printCubes(-WhiteCubeList, -BlackCubeList). O predicado printBoard/1 imprime no ecrã o tabuleiro com o topo de cada stack ('W' para branco e 'B' para preto), bem como os cubos que estejam no tabuleiro ('K' para branco e 'C' para preto). O predicado printCubes/2 imprime no ecrã os cubos não usados.
