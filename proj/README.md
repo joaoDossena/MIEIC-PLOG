@@ -10,7 +10,6 @@ Grupo: Nava_3
 
 
 # MUDAR OS + e os - !!!!!!!!!!!
-# MUDAR REPRESENTAÇÃO DAS PILHAS
 # FAZER FUNÇÃO DISPLAY_GAME MAIS GENÉRICA
 # MUDAR FOTOS DAS REPRESENTAÇÕES, APÓS MUDÁ-LAS
 
@@ -99,4 +98,4 @@ Temos também os predicados finalWhiteCubes/1 e finalBlackCubes/1, representando
 
 
 ### Visualização do estado de jogo
-O predicado play/0 chama os predicados initial(+GameState), que inicializa o tabuleiro e as listas de cubos fora do tabuleiro, e display_game(-GameState, -Player), que, por sua vez, chama printBoard(-Board) e printCubes(-WhiteCubeList, -BlackCubeList). O predicado printBoard/1 imprime no ecrã o tabuleiro com o topo de cada stack ('W' para branco e 'B' para preto), bem como os cubos que estejam no tabuleiro ('K' para branco e 'C' para preto). O predicado printCubes/2 imprime no ecrã os cubos não usados.
+O predicado play/0 chama os predicados initial(+GameState), que inicializa o tabuleiro e os números de cubos fora do tabuleiro, e display_game(-GameState, -Player), que, por sua vez, chama printBoard(-Board) e printCubes(-WhiteCubeLeft, -BlackCubeLeft). O predicado printBoard/1 imprime no ecrã o tabuleiro com o topo de cada stack ('W' para branco e 'B' para preto), bem como os cubos que estejam no tabuleiro ('K' para branco e 'C' para preto). O predicado printCubes/2 imprime no ecrã os cubos não usados.
