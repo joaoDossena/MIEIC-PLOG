@@ -66,18 +66,18 @@ letter(5, 'E').
 
 % Displays a certain game state
 % display_game(+GameState, +Player)
-display_game([Board, WhiteCubeList, BlackCubeList], Player) :-
+display_game([Board, WhiteCubeLeft, BlackCubeLeft], Player) :-
     write('Turn: '), write(Player),
     printBoard(Board),
-    printCubes(WhiteCubeList, BlackCubeList).
+    printCubes(WhiteCubeLeft, BlackCubeLeft).
 
 
 % Prints game board Board
 % printBoard(+Board)
 printBoard(Board) :-
     nl,
-    write('   | 1 | 2 | 3 | 4 | 5 | \n'),
-    write('---|---|---|---|---|---|\n'),
+    write('            |      1     |      2     |      3     |      4     |      5     | \n'),
+    write('------------|------------|------------|------------|------------|------------|\n'),
     printMatrix(Board, 1).
 
 
@@ -86,36 +86,47 @@ printBoard(Board) :-
 printMatrix([], 6).
 printMatrix([Head|Tail], N) :-
     letter(N, L),
-    write(' '),
-    write(L),
+    format('~t~s~t~12||', [L]),
+    %% write('    '),
+    %% write(L),
     N1 is N + 1,
-    write(' | '),
+    %% write('       | '),
     printLine(Head),
-    write('\n---|---|---|---|---|---|\n'),
+    write('\n------------|------------|------------|------------|------------|------------|\n'),
     printMatrix(Tail, N1).
 
 % Prints a line
 % printLine(+Line)
 printLine([]).
 printLine([Stack|RestOfLine]) :-
-    printTop(Stack),
-    write(' | '),
+    convertStackIntoString(Stack, String),
+    %% printStack(Stack),
+    format('~12+~t~s~t~12+|', [String]),
     printLine(RestOfLine).
 
-% Prints top of the stack
-% printTop(+Stack)
-printTop([]).
-printTop([TopOfStack|_RestOfStack]) :-
+% Prints the stack
+% printStack(+Stack)
+printStack([]).
+printStack([TopOfStack|RestOfStack]) :-
     symbol(TopOfStack, S),
-    write(S).
+    write(S),
+    printStack(RestOfStack).
 
-% Prints lists of non-used cubes
-% printCubes(+WhiteCubeList, +BlackCubeList)
-printCubes(WhiteCubeList, BlackCubeList) :-
+convertStackIntoString(Stack, String):-
+    convertStackIntoString(Stack, '', String).
+convertStackIntoString([], String, String).
+convertStackIntoString([H|T], Acc, String) :-
+    symbol(H, S),
+    atom_concat(S, Acc, Acc1),
+    convertStackIntoString(T, Acc1, String).
+
+% Prints number of non-used cubes
+% printCubes(+WhiteCubesLeft, +BlackCubesLeft)
+printCubes(WhiteCubesLeft, BlackCubesLeft) :-
     write('White cubes left: '),
-    printList(WhiteCubeList),nl,
+    write(WhiteCubesLeft),nl,
     write('Black cubes left: '),
-    printList(BlackCubeList),nl.
+    write(BlackCubesLeft),nl.
 
 
 % Prints a list of symbols
