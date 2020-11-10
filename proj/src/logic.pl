@@ -1,18 +1,18 @@
 
 /*
 blackPlayerTurn(Board, NewBoard, 'Person') :-
-  write('\n------------------ PLAYER (BLACK)  -------------------\n\n'),
+  write('\n------------------ PLAYER 2 (BLACK)  -------------------\n\n'),
       
 
 blackPlayerTurn(Board, NewBoard, 'Computer') :-
   write('\n----------------- COMPUTER (BLACK) ------------------\n\n'),
   
 
-whitePlayerTurn(NewBoard, FinalBoard, 'Person') :-
+whitePlayerTurn(Board, NewBoard, 'Person') :-
   write('\n------------------ PLAYER 1 (WHITE) -------------------\n\n'),
       
 
-whitePlayerTurn(Board, FinalBoard, 'Computer') :-
+whitePlayerTurn(Board, NewBoard, 'Computer') :-
   write('\n----------------- COMPUTER (WHITE) ------------------\n\n'),
       
 */
