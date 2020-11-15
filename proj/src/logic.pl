@@ -1,4 +1,3 @@
-
 /*
 blackPlayerTurn(Board, NewBoard, 'Person') :-
   write('\n------------------ PLAYER 2 (BLACK)  -------------------\n\n'),
@@ -10,12 +9,12 @@ blackPlayerTurn(Board, NewBoard, 'Computer') :-
 
 whitePlayerTurn(Board, NewBoard, 'Person') :-
   write('\n------------------ PLAYER 1 (WHITE) -------------------\n\n'),
+
       
 
 whitePlayerTurn(Board, NewBoard, 'Computer') :-
   write('\n----------------- COMPUTER (WHITE) ------------------\n\n'),
-      
-*/
+ */     
 
 /*
 %Loop do jogo, em que recebe a jogada de cada jogador e verifica o estado do jogo a seguir.
@@ -32,9 +31,44 @@ gameLoop(Board, Player1, Player2) :-
   ).
 */
 
-checkForWinner(white, [_Board, 0, _BlackCubesLeft]).
-checkForWinner(black, [_Board, _WhiteCubesLeft, 0]).
 
+notWhiteStack([]).
+notWhiteStack([TopOfStack|_RestOfStack]) :- 
+  TopOfStack == black.
+
+noWhiteStacksOnRow([]).
+noWhiteStacksOnRow([H|T]) :-
+  notWhiteStack(H),
+  noWhiteStacksOnRow(T).
+
+noWhiteStacksOnBoard([]).
+noWhiteStacksOnBoard([Row|Rest]) :- 
+  noWhiteStacksOnRow(Row),
+  noWhiteStacksOnBoard(Rest).
+  
+
+notBlackStack([]).
+notBlackStack([TopOfStack|_RestOfStack]) :- 
+  TopOfStack == white.
+
+noBlackStacksOnRow([]).
+noBlackStacksOnRow([H|T]) :-
+  notBlackStack(H),
+  noBlackStacksOnRow(T).
+
+noBlackStacksOnBoard([]).
+noBlackStacksOnBoard([Row|Rest]) :-
+  noBlackStacksOnRow(Row),
+  noBlackStacksOnBoard(Rest).
+
+
+checkForWinner([_Board, 0, _BlackCubesLeft], white).
+checkForWinner([Board, _WhiteCubesLeft, _BlackCubesLeft], white) :-
+  noBlackStacksOnBoard(Board).
+
+checkForWinner([_Board, _WhiteCubesLeft, 0], black).
+checkForWinner([Board, _WhiteCubesLeft, _BlackCubesLeft], black) :-
+  noWhiteStacksOnBoard(Board).
   
 
 
