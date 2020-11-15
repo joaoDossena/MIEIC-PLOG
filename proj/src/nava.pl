@@ -13,4 +13,4 @@ nava :-
 play :- 
 	initial(GameState),
 	display_game(GameState, white),
-	checkForWinner(GameState, white).
+	gameLoop(GameState, 'Person', 'Person').

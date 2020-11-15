@@ -1,35 +1,44 @@
-/*
-blackPlayerTurn(Board, NewBoard, 'Person') :-
-  write('\n------------------ PLAYER 2 (BLACK)  -------------------\n\n'),
-      
 
-blackPlayerTurn(Board, NewBoard, 'Computer') :-
-  write('\n----------------- COMPUTER (BLACK) ------------------\n\n'),
-  
-
-whitePlayerTurn(Board, NewBoard, 'Person') :-
+whitePlayerTurn(OldState, NewState, 'Person') :-
   write('\n------------------ PLAYER 1 (WHITE) -------------------\n\n'),
+  display_game(OldState, white),
+  nl,write('What stack do you want to move?'),nl,
+  inputRow(Row),
+  inputColumn(Column).
 
+blackPlayerTurn(OldState, NewState, 'Person') :-
+  write('\n------------------ PLAYER 2 (BLACK)  -------------------\n\n'),
+  display_game(OldState, black),
+  write('What stack do you want to move?'),nl,
+  inputRow(Row),
+  inputColumn(Column).
       
 
+
+
+      
+/*
 whitePlayerTurn(Board, NewBoard, 'Computer') :-
   write('\n----------------- COMPUTER (WHITE) ------------------\n\n'),
  */     
-
 /*
+blackPlayerTurn(Board, NewBoard, 'Computer') :-
+  write('\n----------------- COMPUTER (BLACK) ------------------\n\n'),
+*/
+
 %Loop do jogo, em que recebe a jogada de cada jogador e verifica o estado do jogo a seguir.
-gameLoop(Board, Player1, Player2) :-
-  whitePlayerTurn(Board, NewBoard, Player1),
+gameLoop(OldState, Player1, Player2) :-
+  whitePlayerTurn(OldState, NewState, Player1),
   (
-    (checkForWinner(white, NewBoard), write('\nThanks for playing!\n'));
-    (blackPlayerTurn(NewBoard, FinalBoard, Player2),
+    (checkForWinner(NewState, white), write('\nThanks for playing!\n'));
+    (blackPlayerTurn(NewState, YetANewerState, Player2),
       (
-        (checkForWinner(black, FinalBoard), write('\nThanks for playing!\n'));
-        (gameLoop(FinalBoard, Player1, Player2))
+        (checkForWinner(YetANewerState, black), write('\nThanks for playing!\n'));
+        (gameLoop(YetANewerState, Player1, Player2))
       )
    )
   ).
-*/
+
 
 
 notWhiteStack([]).
