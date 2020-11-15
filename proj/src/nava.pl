@@ -12,4 +12,5 @@ nava :-
 % play/0
 play :- 
 	initial(GameState),
-	display_game(GameState, white).
+	display_game(GameState, white),
+	checkForWinner(GameState, white).
