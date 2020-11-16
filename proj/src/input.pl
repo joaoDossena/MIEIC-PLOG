@@ -3,7 +3,7 @@ inputRow(NewRow) :-
     readRow(Row),
     validateRow(Row, NewRow).
 
-inputColumn(NewColumn) :-
+inputColumn(Column) :-
     readColumn(Column),
     validateColumn(Column).
 
