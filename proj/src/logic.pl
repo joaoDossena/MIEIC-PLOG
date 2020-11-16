@@ -1,31 +1,33 @@
 
 whitePlayerTurn(OldState, NewState, 'Person') :-
-  write('\n------------------ PLAYER 1 (WHITE) -------------------\n\n'),
+  nl,nl,nl,write('\n------------------ PLAYER 1 (WHITE) -------------------\n\n'),
   display_game(OldState, white),
   nl,write('What stack do you want to move?'),nl,
-  inputRow(Row),
-  inputColumn(Column).
+  getNewCoords(OldState, NewState, 'Person').
 
 blackPlayerTurn(OldState, NewState, 'Person') :-
-  write('\n------------------ PLAYER 2 (BLACK)  -------------------\n\n'),
+  nl,nl,nl,write('\n------------------ PLAYER 2 (BLACK)  -------------------\n\n'),
   display_game(OldState, black),
   write('What stack do you want to move?'),nl,
-  inputRow(Row),
-  inputColumn(Column).
+  getNewCoords(OldState, NewState, 'Person').
       
 
-
-
-      
 /*
 whitePlayerTurn(Board, NewBoard, 'Computer') :-
-  write('\n----------------- COMPUTER (WHITE) ------------------\n\n'),
- */     
-/*
+  write('\n----------------- COMPUTER (WHITE) ------------------\n\n').  
 blackPlayerTurn(Board, NewBoard, 'Computer') :-
-  write('\n----------------- COMPUTER (BLACK) ------------------\n\n'),
+  write('\n----------------- COMPUTER (BLACK) ------------------\n\n').
 */
 
+getNewCoords(OldState, NewState, Player) :-
+      inputRow(NewRow),
+      inputColumn(NewColumn),
+      nl,
+      ColumnIndex is NewColumn - 1,
+      RowIndex is NewRow - 1,
+      checkMove(OldState, Player, NewState, ColumnIndex, RowIndex).
+
+  
 %Loop do jogo, em que recebe a jogada de cada jogador e verifica o estado do jogo a seguir.
 gameLoop(OldState, Player1, Player2) :-
   whitePlayerTurn(OldState, NewState, Player1),
