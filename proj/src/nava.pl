@@ -4,6 +4,8 @@
 :- consult('computer.pl').
 :- consult('logic.pl').
 
+:- use_module(library(readutil)).
+
 
 nava :-
   	mainMenu.
@@ -12,5 +14,5 @@ nava :-
 % play/0
 play :- 
 	initial(GameState),
-	display_game(GameState, white),
+	%% display_game(GameState, white),
 	gameLoop(GameState, 'Person', 'Person').

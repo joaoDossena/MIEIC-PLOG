@@ -58,11 +58,11 @@ symbol(whiteCube, 'K').
 
 % Row letters
 % letter(+Number, +Character)
-letter(1, 'A').
-letter(2, 'B').
-letter(3, 'C').
-letter(4, 'D').
-letter(5, 'E').
+letter(1, 'a').
+letter(2, 'b').
+letter(3, 'c').
+letter(4, 'd').
+letter(5, 'e').
 
 % Displays a certain game state
 % display_game(+GameState, +Player)
