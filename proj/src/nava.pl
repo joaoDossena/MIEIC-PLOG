@@ -4,7 +4,7 @@
 :- consult('computer.pl').
 :- consult('logic.pl').
 
-:- use_module(library(readutil)).
+:- use_module(library(lists)).
 
 
 nava :-
