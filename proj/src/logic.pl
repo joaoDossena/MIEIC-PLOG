@@ -31,8 +31,8 @@ blackPlayerTurn(Board, NewBoard, 'Computer') :-
 % Gets all valid moves possible, given a state and a player
 % valid_moves(+GameState, +Player, -ListOfMoves)
 valid_moves(GameState, Player, ListOfMoves) :-
-  between(1, 5, R), between(1, 5, C), between(1, 5, NR), between(1, 5, NC),
-  bagof([R/C, NR/NC], validMove(GameState, Player, R/C, NR/NC), ListOfMoves).
+  between(1, 5, Row), between(1, 5, Column), between(1, 5, NewRow), between(1, 5, NewColumn),
+  bagof([Row/Column, NewRow/NewColumn], validMove(GameState, Player, Row/Column, NewRow/NewColumn), ListOfMoves).
 
 validMove([Board, _WhiteCubesLeft, _BlackCubesLeft], Player, Row/Column, NewRow/NewColumn) :-
   Row >= 1, Row =< 5, NewRow >= 1, NewRow =< 5, Column >= 1, Column =< 5, NewColumn >= 1, NewColumn =< 5,
