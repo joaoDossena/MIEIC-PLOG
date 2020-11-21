@@ -3,20 +3,24 @@ whitePlayerTurn([OldBoard, OldWhites, OldBlacks], _NewState, 'Person') :-
   nl,nl,nl,write('\n------------------ PLAYER 1 (WHITE) -------------------\n\n'),
   display_game([OldBoard, OldWhites, OldBlacks], white),
   nl,write('What stack do you want to move?'),nl,
-  getCurrentCoords(OldBoard, white, Row, Column),
+  getCoords(Row, Column),
+  checkStack(OldBoard, white, Row, Column, Stack),
   nl,write('Where to?'),nl,
-  getFutureCoords(NewRow, NewColumn).
+  getCoords(NewRow, NewColumn),
+  validMove([OldBoard, OldWhites, OldBlacks], Row/Column, NewRow/NewColumn, Stack).
+
 
 blackPlayerTurn([OldBoard, OldWhites, OldBlacks], _NewState, 'Person') :-
   nl,nl,nl,write('\n------------------ PLAYER 2 (BLACK)  -------------------\n\n'),
-  display_game(OldState, black),
+  display_game([OldBoard, OldWhites, OldBlacks], black),
   write('What stack do you want to move?'),nl,
-  getCurrentCoords(OldBoard, black, Row, Column),
+  getCoords(Row, Column),
+  checkStack(OldBoard, black, Row, Column, Stack),
   nl,write('Where to?'),nl,
-  getFutureCoords(NewRow, NewColumn).
+  getCoords(NewRow, NewColumn),
+  validMove([OldBoard, OldWhites, OldBlacks], Row/Column, NewRow/NewColumn, Stack).
 
       
-
 /*
 whitePlayerTurn(Board, NewBoard, 'Computer') :-
   write('\n----------------- COMPUTER (WHITE) ------------------\n\n').  
@@ -24,16 +28,34 @@ blackPlayerTurn(Board, NewBoard, 'Computer') :-
   write('\n----------------- COMPUTER (BLACK) ------------------\n\n').
 */
 
-getFutureCoords(RowIndex, ColumnIndex) :-
+% Gets all valid moves possible, given a state and a player
+% valid_moves(+GameState, +Player, -ListOfMoves)
+valid_moves(GameState, Player, ListOfMoves) :-
+  between(1, 5, R), between(1, 5, C), between(1, 5, NR), between(1, 5, NC),
+  bagof([R/C, NR/NC], validMove(GameState, Player, R/C, NR/NC), ListOfMoves).
+
+validMove([Board, _WhiteCubesLeft, _BlackCubesLeft], Player, Row/Column, NewRow/NewColumn) :-
+  checkStack(Board, Player, Row, Column, Stack),
+  %% Row >= 1, Row =< 5, NewRow >= 1, NewRow =< 5, Column >= 1, Column =< 5, NewColumn >= 1, NewColumn =< 5,
+  Dist is abs(NewRow - Row),
+  Dist > 0,
+  NewColumn == Column,
+  length(Stack, Length),
+  Dist =< Length.
+
+validMove([Board, _WhiteCubesLeft, _BlackCubesLeft], Player, Row/Column, NewRow/NewColumn) :-
+  checkStack(Board, Player, Row, Column, Stack),
+  %% Row >= 1, Row =< 5, NewRow >= 1, NewRow =< 5, Column >= 1, Column =< 5, NewColumn >= 1, NewColumn =< 5,
+  NewRow == Row,
+  Dist is abs(NewColumn - Column),
+  Dist > 0,
+  length(Stack, Length),
+  Dist =< Length.
+
+getCoords(RowIndex, ColumnIndex) :-
   inputRow(RowIndex),
   inputColumn(ColumnIndex).
 
-getCurrentCoords(Board, Player, RowIndex, ColumnIndex) :-
-      inputRow(RowIndex),
-      inputColumn(ColumnIndex),
-      checkStack(Board, Player, RowIndex, ColumnIndex).
-
-  
 %Loop do jogo, em que recebe a jogada de cada jogador e verifica o estado do jogo a seguir.
 gameLoop(OldState, Player1, Player2) :-
   whitePlayerTurn(OldState, NewState, Player1),
@@ -47,18 +69,18 @@ gameLoop(OldState, Player1, Player2) :-
    )
   ).
 
-getElementFromBoard(Board, RowIndex, ColumnIndex, Elem) :-
+getStackFromBoard(Board, RowIndex, ColumnIndex, Stack) :-
   A is RowIndex,
   B is ColumnIndex,
   nth1(A, Board, Row),
-  nth1(B, Row, Elem).
+  nth1(B, Row, Stack).
 
 
-checkStack(Board, white, RowIndex, ColumnIndex) :-
-  getElementFromBoard(Board, RowIndex, ColumnIndex, Stack),
+checkStack(Board, white, RowIndex, ColumnIndex, Stack) :-
+  getStackFromBoard(Board, RowIndex, ColumnIndex, Stack),
   whiteStack(Stack).
-checkStack(Board, black, RowIndex, ColumnIndex) :-
-  getElementFromBoard(Board, RowIndex, ColumnIndex, Stack),
+checkStack(Board, black, RowIndex, ColumnIndex, Stack) :-
+  getStackFromBoard(Board, RowIndex, ColumnIndex, Stack),
   blackStack(Stack).
 
 
