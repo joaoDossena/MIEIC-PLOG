@@ -36,6 +36,7 @@ blackPlayerTurn(Board, NewBoard, 'Computer') :-
   %% get substack
   %% append substack to new coords
   %% if old coords == empty, add cube
+  %% return new state
   
 
 
