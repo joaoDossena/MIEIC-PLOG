@@ -35,8 +35,8 @@ valid_moves(GameState, Player, ListOfMoves) :-
   bagof([R/C, NR/NC], validMove(GameState, Player, R/C, NR/NC), ListOfMoves).
 
 validMove([Board, _WhiteCubesLeft, _BlackCubesLeft], Player, Row/Column, NewRow/NewColumn) :-
+  Row >= 1, Row =< 5, NewRow >= 1, NewRow =< 5, Column >= 1, Column =< 5, NewColumn >= 1, NewColumn =< 5,
   checkStack(Board, Player, Row, Column, Stack),
-  %% Row >= 1, Row =< 5, NewRow >= 1, NewRow =< 5, Column >= 1, Column =< 5, NewColumn >= 1, NewColumn =< 5,
   Dist is abs(NewRow - Row),
   Dist > 0,
   NewColumn == Column,
@@ -44,8 +44,8 @@ validMove([Board, _WhiteCubesLeft, _BlackCubesLeft], Player, Row/Column, NewRow/
   Dist =< Length.
 
 validMove([Board, _WhiteCubesLeft, _BlackCubesLeft], Player, Row/Column, NewRow/NewColumn) :-
+  Row >= 1, Row =< 5, NewRow >= 1, NewRow =< 5, Column >= 1, Column =< 5, NewColumn >= 1, NewColumn =< 5,
   checkStack(Board, Player, Row, Column, Stack),
-  %% Row >= 1, Row =< 5, NewRow >= 1, NewRow =< 5, Column >= 1, Column =< 5, NewColumn >= 1, NewColumn =< 5,
   NewRow == Row,
   Dist is abs(NewColumn - Column),
   Dist > 0,
