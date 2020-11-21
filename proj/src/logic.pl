@@ -2,10 +2,10 @@
 whitePlayerTurn([OldBoard, OldWhites, OldBlacks], _NewState, 'Person') :-
   nl,nl,nl,write('\n------------------ PLAYER 1 (WHITE) -------------------\n\n'),
   display_game([OldBoard, OldWhites, OldBlacks], white),
-  nl,write('What stack do you want to move?'),nl,
+  write('What stack do you want to move?'),nl,
   getCoords(Row, Column),
   checkStack(OldBoard, white, Row, Column),
-  nl,write('Where to?'),nl,
+  write('Where to?'),nl,
   getCoords(NewRow, NewColumn),
   valid_moves([OldBoard, OldWhites, OldBlacks], white, ListOfValidMoves),
   member([Row/Column, NewRow/NewColumn], ListOfValidMoves).
@@ -17,7 +17,7 @@ blackPlayerTurn([OldBoard, OldWhites, OldBlacks], _NewState, 'Person') :-
   write('What stack do you want to move?'),nl,
   getCoords(Row, Column),
   checkStack(OldBoard, black, Row, Column),
-  nl,write('Where to?'),nl,
+  write('Where to?'),nl,
   getCoords(NewRow, NewColumn),
   valid_moves([OldBoard, OldWhites, OldBlacks], white, ListOfValidMoves),
   member([Row/Column, NewRow/NewColumn], ListOfValidMoves).
@@ -29,6 +29,15 @@ whitePlayerTurn(Board, NewBoard, 'Computer') :-
 blackPlayerTurn(Board, NewBoard, 'Computer') :-
   write('\n----------------- COMPUTER (BLACK) ------------------\n\n').
 */
+
+% move(+GameState, +Move, -NewGameState)
+%% move(GameState, [FromRow/FromColumn, ToRow/ToColumn], NewGameState) :-
+  %% get Dist
+  %% get substack
+  %% append substack to new coords
+  %% if old coords == empty, add cube
+  
+
 
 % Gets all valid moves possible, given a state and a player
 % valid_moves(+GameState, +Player, -ListOfMoves)
@@ -44,7 +53,6 @@ validMove([Board, _WhiteCubesLeft, _BlackCubesLeft], Player, Row/Column, NewRow/
   NewColumn == Column,
   length(Stack, Length),
   Dist =< Length.
-
 validMove([Board, _WhiteCubesLeft, _BlackCubesLeft], Player, Row/Column, NewRow/NewColumn) :-
   Row >= 1, Row =< 5, NewRow >= 1, NewRow =< 5, Column >= 1, Column =< 5, NewColumn >= 1, NewColumn =< 5,
   checkStack(Board, Player, Row, Column, Stack),
