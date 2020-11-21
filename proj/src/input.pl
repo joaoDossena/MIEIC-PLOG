@@ -36,15 +36,15 @@ validateRow(_Row, NewRow) :-
 
 % Checks if column is valid
 validateColumn(1, NewColumn) :-
-    NewColumn = 1.
+    NewColumn = 1, !.
 validateColumn(2, NewColumn) :-
-    NewColumn = 2.
+    NewColumn = 2, !.
 validateColumn(3, NewColumn) :-
-    NewColumn = 3.
+    NewColumn = 3, !.
 validateColumn(4, NewColumn) :-
-    NewColumn = 4.
+    NewColumn = 4, !.
 validateColumn(5, NewColumn) :-
-    NewColumn = 5.
+    NewColumn = 5, !.
 validateColumn(_Column, NewColumn) :-
     %% Column =!= 1, Column =!= 2, Column =!= 3, Column =!= 4, Column =!= 5,
     write('ERROR: That column is not valid!\n\n'),
