@@ -4,10 +4,11 @@ whitePlayerTurn([OldBoard, OldWhites, OldBlacks], _NewState, 'Person') :-
   display_game([OldBoard, OldWhites, OldBlacks], white),
   nl,write('What stack do you want to move?'),nl,
   getCoords(Row, Column),
-  checkStack(OldBoard, white, Row, Column, Stack),
+  checkStack(OldBoard, white, Row, Column),
   nl,write('Where to?'),nl,
   getCoords(NewRow, NewColumn),
-  validMove([OldBoard, OldWhites, OldBlacks], Row/Column, NewRow/NewColumn, Stack).
+  valid_moves([OldBoard, OldWhites, OldBlacks], white, ListOfValidMoves),
+  member([Row/Column, NewRow/NewColumn], ListOfValidMoves).
 
 
 blackPlayerTurn([OldBoard, OldWhites, OldBlacks], _NewState, 'Person') :-
@@ -15,10 +16,11 @@ blackPlayerTurn([OldBoard, OldWhites, OldBlacks], _NewState, 'Person') :-
   display_game([OldBoard, OldWhites, OldBlacks], black),
   write('What stack do you want to move?'),nl,
   getCoords(Row, Column),
-  checkStack(OldBoard, black, Row, Column, Stack),
+  checkStack(OldBoard, black, Row, Column),
   nl,write('Where to?'),nl,
   getCoords(NewRow, NewColumn),
-  validMove([OldBoard, OldWhites, OldBlacks], Row/Column, NewRow/NewColumn, Stack).
+  valid_moves([OldBoard, OldWhites, OldBlacks], white, ListOfValidMoves),
+  member([Row/Column, NewRow/NewColumn], ListOfValidMoves).
 
       
 /*
@@ -75,11 +77,19 @@ getStackFromBoard(Board, RowIndex, ColumnIndex, Stack) :-
   nth1(A, Board, Row),
   nth1(B, Row, Stack).
 
-
+% Checks if the stack is in control of the player, returns the stack
 checkStack(Board, white, RowIndex, ColumnIndex, Stack) :-
   getStackFromBoard(Board, RowIndex, ColumnIndex, Stack),
   whiteStack(Stack).
 checkStack(Board, black, RowIndex, ColumnIndex, Stack) :-
+  getStackFromBoard(Board, RowIndex, ColumnIndex, Stack),
+  blackStack(Stack).
+
+% Checks if the stack is in control of the player, doesn't return the stack
+checkStack(Board, white, RowIndex, ColumnIndex) :-
+  getStackFromBoard(Board, RowIndex, ColumnIndex, Stack),
+  whiteStack(Stack).
+checkStack(Board, black, RowIndex, ColumnIndex) :-
   getStackFromBoard(Board, RowIndex, ColumnIndex, Stack),
   blackStack(Stack).
 
