@@ -4,7 +4,7 @@ whitePlayerTurn([OldBoard, OldWhites, OldBlacks], _NewState, 'Person') :-
   display_game([OldBoard, OldWhites, OldBlacks], white),
   write('What stack do you want to move?'),nl,
   getCoords(Row, Column),
-  checkStack(OldBoard, white, Row, Column),
+  checkStack(OldBoard, white, Row/Column),
   write('Where to?'),nl,
   getCoords(NewRow, NewColumn),
   valid_moves([OldBoard, OldWhites, OldBlacks], white, ListOfValidMoves),
@@ -16,7 +16,7 @@ blackPlayerTurn([OldBoard, OldWhites, OldBlacks], _NewState, 'Person') :-
   display_game([OldBoard, OldWhites, OldBlacks], black),
   write('What stack do you want to move?'),nl,
   getCoords(Row, Column),
-  checkStack(OldBoard, black, Row, Column),
+  checkStack(OldBoard, black, Row/Column),
   write('Where to?'),nl,
   getCoords(NewRow, NewColumn),
   valid_moves([OldBoard, OldWhites, OldBlacks], white, ListOfValidMoves),
@@ -31,13 +31,34 @@ blackPlayerTurn(Board, NewBoard, 'Computer') :-
 */
 
 % move(+GameState, +Move, -NewGameState)
-%% move(GameState, [FromRow/FromColumn, ToRow/ToColumn], NewGameState) :-
-  %% get Dist
-  %% get substack
-  %% append substack to new coords
-  %% if old coords == empty, add cube
-  %% return new state
-  
+%% move([OldBoard, OldWhites, OldBlacks], [FromRow/FromColumn, ToRow/ToColumn], [NewBoard, NewWhites, NewBlacks]) :-
+  %% getDist([FromRow/FromColumn, ToRow/ToColumn], Dist)
+  %% get substack with Dist length
+  %% remove substack from stack
+  %% append substack to new coords (don't forget to append on the top of stack)
+  %% if old coords == empty, add cube there, remove from GameState
+  %% return new state.
+
+%% getNTopPieces(_Stack, _NTopPieces, 0).
+%% getNTopPieces(_Stack, [], N).
+%% getNTopPieces([TopOfStack|RestOfStack], NTopPieces, N) :-
+  %% length([TopOfStack|RestOfStack], Length), Length > 0,
+  %% append(TopOfStack, NTopPieces, NTopPieces),
+  %% getNTopPieces(RestOfStack, NTopPieces, N-1).
+
+%% removeSubstackFromStack(Board, Row/Column, NumPieces, Substack) :-
+  %% getStackFromBoard(Board, Row/Column, Stack),
+  %% getNTopPieces(Stack, Substack, NumPieces),
+
+
+getDist([Row/Column, NewRow/NewColumn], Dist) :-
+  NewRow == Row,
+  Dist is abs(NewColumn - Column),
+  Dist > 0.
+getDist([Row/Column, NewRow/NewColumn], Dist) :-
+  NewColumn == Column,
+  Dist is abs(NewRow - Row),
+  Dist > 0.
 
 
 % Gets all valid moves possible, given a state and a player
@@ -49,17 +70,13 @@ valid_moves(GameState, Player, ListOfMoves) :-
 validMove([Board, _WhiteCubesLeft, _BlackCubesLeft], Player, Row/Column, NewRow/NewColumn) :-
   Row >= 1, Row =< 5, NewRow >= 1, NewRow =< 5, Column >= 1, Column =< 5, NewColumn >= 1, NewColumn =< 5,
   checkStack(Board, Player, Row, Column, Stack),
-  Dist is abs(NewRow - Row),
-  Dist > 0,
-  NewColumn == Column,
+  getDist([Row/Column, NewRow/NewColumn], Dist),
   length(Stack, Length),
   Dist =< Length.
 validMove([Board, _WhiteCubesLeft, _BlackCubesLeft], Player, Row/Column, NewRow/NewColumn) :-
   Row >= 1, Row =< 5, NewRow >= 1, NewRow =< 5, Column >= 1, Column =< 5, NewColumn >= 1, NewColumn =< 5,
   checkStack(Board, Player, Row, Column, Stack),
-  NewRow == Row,
-  Dist is abs(NewColumn - Column),
-  Dist > 0,
+  getDist([Row/Column, NewRow/NewColumn], Dist),
   length(Stack, Length),
   Dist =< Length.
 
@@ -80,26 +97,24 @@ gameLoop(OldState, Player1, Player2) :-
    )
   ).
 
-getStackFromBoard(Board, RowIndex, ColumnIndex, Stack) :-
-  A is RowIndex,
-  B is ColumnIndex,
-  nth1(A, Board, Row),
-  nth1(B, Row, Stack).
+getStackFromBoard(Board, RowIndex/ColumnIndex, Stack) :-
+  nth1(RowIndex, Board, Row),
+  nth1(ColumnIndex, Row, Stack).
 
 % Checks if the stack is in control of the player, returns the stack
-checkStack(Board, white, RowIndex, ColumnIndex, Stack) :-
-  getStackFromBoard(Board, RowIndex, ColumnIndex, Stack),
+checkStack(Board, white, RowIndex/ColumnIndex, Stack) :-
+  getStackFromBoard(Board, RowIndex/ColumnIndex, Stack),
   whiteStack(Stack).
-checkStack(Board, black, RowIndex, ColumnIndex, Stack) :-
-  getStackFromBoard(Board, RowIndex, ColumnIndex, Stack),
+checkStack(Board, black, RowIndex/ColumnIndex, Stack) :-
+  getStackFromBoard(Board, RowIndex/ColumnIndex, Stack),
   blackStack(Stack).
 
 % Checks if the stack is in control of the player, doesn't return the stack
-checkStack(Board, white, RowIndex, ColumnIndex) :-
-  getStackFromBoard(Board, RowIndex, ColumnIndex, Stack),
+checkStack(Board, white, RowIndex/ColumnIndex) :-
+  getStackFromBoard(Board, RowIndex/ColumnIndex, Stack),
   whiteStack(Stack).
-checkStack(Board, black, RowIndex, ColumnIndex) :-
-  getStackFromBoard(Board, RowIndex, ColumnIndex, Stack),
+checkStack(Board, black, RowIndex/ColumnIndex) :-
+  getStackFromBoard(Board, RowIndex/ColumnIndex, Stack),
   blackStack(Stack).
 
 
