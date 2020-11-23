@@ -33,22 +33,34 @@ blackPlayerTurn(Board, NewBoard, 'Computer') :-
 % move(+GameState, +Move, -NewGameState)
 %% move([OldBoard, OldWhites, OldBlacks], [FromRow/FromColumn, ToRow/ToColumn], [NewBoard, NewWhites, NewBlacks]) :-
   %% getDist([FromRow/FromColumn, ToRow/ToColumn], Dist)
-  %% get substack with Dist length
-  %% remove substack from stack
-  %% append substack to new coords (don't forget to append on the top of stack)
+  %% splitStack(Board, Row/Column, Dist, TopSubstack, BottomSubstack)
+  %% append substacks to new coords on new board (don't forget to append on the top of stack)
   %% if old coords == empty, add cube there, remove from GameState
   %% return new state.
 
-%% getNTopPieces(_Stack, _NTopPieces, 0).
-%% getNTopPieces(_Stack, [], N).
-%% getNTopPieces([TopOfStack|RestOfStack], NTopPieces, N) :-
-  %% length([TopOfStack|RestOfStack], Length), Length > 0,
-  %% append(TopOfStack, NTopPieces, NTopPieces),
-  %% getNTopPieces(RestOfStack, NTopPieces, N-1).
 
-%% removeSubstackFromStack(Board, Row/Column, NumPieces, Substack) :-
-  %% getStackFromBoard(Board, Row/Column, Stack),
-  %% getNTopPieces(Stack, Substack, NumPieces),
+splitStack(Board, Row/Column, NumPieces, TopSubstack, BottomSubstack) :-
+  getStackFromBoard(Board, Row/Column, Stack),
+  getNTopPieces(Stack, NumPieces, TopSubstack),
+  removeNTopPieces(Stack, NumPieces, BottomSubstack).
+
+getNTopPieces(Stack, N, Substack):-
+  length(Stack, Length), Length >=  N,
+  getNTopPiecesAux(Stack, N, Substack, []).
+
+getNTopPiecesAux(_Stack, 0, Substack, Substack).
+getNTopPiecesAux([H|T], N, Substack, Acc):-
+  N1 is N - 1,
+  getNTopPiecesAux(T, N1, Substack, [H|Acc]).
+
+removeNTopPieces(Stack, N, Substack):-
+  length(Stack, Length), Length >=  N,
+  removeNTopPiecesAux(Stack, N, Substack).
+
+removeNTopPiecesAux(Stack, 0, Stack).
+removeNTopPiecesAux([_H|T], N, Substack):-
+  N1 is N - 1,
+  removeNTopPiecesAux(T, N1, Substack).
 
 
 getDist([Row/Column, NewRow/NewColumn], Dist) :-
@@ -67,15 +79,10 @@ valid_moves(GameState, Player, ListOfMoves) :-
   between(1, 5, Row), between(1, 5, Column), between(1, 5, NewRow), between(1, 5, NewColumn),
   bagof([Row/Column, NewRow/NewColumn], validMove(GameState, Player, Row/Column, NewRow/NewColumn), ListOfMoves).
 
+
 validMove([Board, _WhiteCubesLeft, _BlackCubesLeft], Player, Row/Column, NewRow/NewColumn) :-
   Row >= 1, Row =< 5, NewRow >= 1, NewRow =< 5, Column >= 1, Column =< 5, NewColumn >= 1, NewColumn =< 5,
-  checkStack(Board, Player, Row, Column, Stack),
-  getDist([Row/Column, NewRow/NewColumn], Dist),
-  length(Stack, Length),
-  Dist =< Length.
-validMove([Board, _WhiteCubesLeft, _BlackCubesLeft], Player, Row/Column, NewRow/NewColumn) :-
-  Row >= 1, Row =< 5, NewRow >= 1, NewRow =< 5, Column >= 1, Column =< 5, NewColumn >= 1, NewColumn =< 5,
-  checkStack(Board, Player, Row, Column, Stack),
+  checkStack(Board, Player, Row/Column, Stack),
   getDist([Row/Column, NewRow/NewColumn], Dist),
   length(Stack, Length),
   Dist =< Length.
