@@ -23,6 +23,8 @@ blackPlayerTurn([OldBoard, OldWhites, OldBlacks], _NewState, 'Person') :-
   member([Row/Column, NewRow/NewColumn], ListOfValidMoves).
 
       
+
+
 /*
 whitePlayerTurn(Board, NewBoard, 'Computer') :-
   write('\n----------------- COMPUTER (WHITE) ------------------\n\n').  
@@ -38,6 +40,26 @@ blackPlayerTurn(Board, NewBoard, 'Computer') :-
   %% if old coords == empty, add cube there, remove from GameState
   %% return new state.
 
+
+replaceElement([[Stack|RestOfColumns]|_RestOfRows], 1/1, Elem) :-
+  Stack = Elem.
+
+
+
+replaceElement([[_Column|RestOfColumns]|_RestOfRows], 1/ColumnIndex, Elem) :-
+  ColumnIndex > 1,
+  NewColumnIndex is ColumnIndex - 1,
+  replaceElement(RestOfColumns, 1/NewColumnIndex, Elem).
+
+
+replaceElement([_Row|RestOfRows], RowIndex/ColumnIndex, Elem) :-
+  RowIndex > 1,
+  NewRowIndex is RowIndex - 1,
+  replaceElement(RestOfRows, NewRowIndex/ColumnIndex, Elem).
+
+
+% notrace,['nava.pl'],initial([Bo,W,B]),trace,replaceElement(Bo,1/1,[1,2,3]).
+% notrace,['nava.pl'],initial([Bo,W,B]),replaceElement(Bo,1/1,[1,2,3]).
 
 splitStack(Board, Row/Column, NumPieces, TopSubstack, BottomSubstack) :-
   getStackFromBoard(Board, Row/Column, Stack),
@@ -63,12 +85,10 @@ removeNTopPiecesAux([_H|T], N, Substack):-
   removeNTopPiecesAux(T, N1, Substack).
 
 
-getDist([Row/Column, NewRow/NewColumn], Dist) :-
-  NewRow == Row,
+getDist([Row/Column, Row/NewColumn], Dist) :-
   Dist is abs(NewColumn - Column),
   Dist > 0.
-getDist([Row/Column, NewRow/NewColumn], Dist) :-
-  NewColumn == Column,
+getDist([Row/Column, NewRow/Column], Dist) :-
   Dist is abs(NewRow - Row),
   Dist > 0.
 
