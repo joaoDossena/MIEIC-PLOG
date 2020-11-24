@@ -1,5 +1,5 @@
 
-whitePlayerTurn([OldBoard, OldWhites, OldBlacks], _NewState, 'Person') :-
+whitePlayerTurn([OldBoard, OldWhites, OldBlacks], NewState, 'Person') :-
   nl,nl,nl,write('\n------------------ PLAYER 1 (WHITE) -------------------\n\n'),
   display_game([OldBoard, OldWhites, OldBlacks], white),
   write('What stack do you want to move?'),nl,
@@ -8,7 +8,8 @@ whitePlayerTurn([OldBoard, OldWhites, OldBlacks], _NewState, 'Person') :-
   write('Where to?'),nl,
   getCoords(NewRow, NewColumn),
   valid_moves([OldBoard, OldWhites, OldBlacks], white, ListOfValidMoves),
-  member([Row/Column, NewRow/NewColumn], ListOfValidMoves).
+  member([Row/Column, NewRow/NewColumn], ListOfValidMoves),
+  move([OldBoard, OldWhites, OldBlacks], [Row/Column, NewRow/NewColumn], NewState).
 
 
 blackPlayerTurn([OldBoard, OldWhites, OldBlacks], _NewState, 'Person') :-
@@ -20,7 +21,8 @@ blackPlayerTurn([OldBoard, OldWhites, OldBlacks], _NewState, 'Person') :-
   write('Where to?'),nl,
   getCoords(NewRow, NewColumn),
   valid_moves([OldBoard, OldWhites, OldBlacks], white, ListOfValidMoves),
-  member([Row/Column, NewRow/NewColumn], ListOfValidMoves).
+  member([Row/Column, NewRow/NewColumn], ListOfValidMoves),
+  move([OldBoard, OldWhites, OldBlacks], [Row/Column, NewRow/NewColumn], NewState).
 
       
 
@@ -33,33 +35,37 @@ blackPlayerTurn(Board, NewBoard, 'Computer') :-
 */
 
 % move(+GameState, +Move, -NewGameState)
-%% move([OldBoard, OldWhites, OldBlacks], [FromRow/FromColumn, ToRow/ToColumn], [NewBoard, NewWhites, NewBlacks]) :-
-  %% getDist([FromRow/FromColumn, ToRow/ToColumn], Dist)
-  %% splitStack(Board, Row/Column, Dist, TopSubstack, BottomSubstack)
-  %% append substacks to new coords on new board (don't forget to append on the top of stack)
+move([OldBoard, OldWhites, OldBlacks], [FromRow/FromColumn, ToRow/ToColumn], [YetANewerBoard, NewWhites, NewBlacks]) :-
+  getDist([FromRow/FromColumn, ToRow/ToColumn], Dist),
+  splitStack(Board, Row/Column, Dist, TopSubstack, BottomSubstack),
+  replaceStack(Board, FromRow, FromColumn, BottomSubstack, NewBoard),
+  %% nth1 get stack of casa que vai mover
+  %% append(topsubstack, stack2)
+  replaceStack(NewBoard, ToRow, ToColumn, TopSubstack, YetANewerBoard).
   %% if old coords == empty, add cube there, remove from GameState
   %% return new state.
 
+%substituir um elemento numa linha e depois substituir uma linha board
 
-replaceElement([[Stack|RestOfColumns]|_RestOfRows], 1/1, Elem) :-
-  Stack = Elem.
+%replaceElem(NewElem, IndexOfElemToReplace, WhereToReplace).
+
+replaceElem(_, _, [], []).
+
+replaceElem(Elem, 1, [_|T], [Elem|T1]):-
+    replaceElem(_, 0, T, T1).
+    
+replaceElem(Elem, N, [H|T], [H|T1]):-
+    N1 is N - 1,
+    replaceElem(Elem, N1, T, T1).
+
+replaceStack(Board, RowNumber, CollumnNumber, Elem, NewBoard):-
+    nth1(RowNumber, Board, Row),
+    replaceElem(Elem, CollumnNumber, Row, NewRow),
+    replaceElem(NewRow, RowNumber, Board, NewBoard).
 
 
-
-replaceElement([[_Column|RestOfColumns]|_RestOfRows], 1/ColumnIndex, Elem) :-
-  ColumnIndex > 1,
-  NewColumnIndex is ColumnIndex - 1,
-  replaceElement(RestOfColumns, 1/NewColumnIndex, Elem).
-
-
-replaceElement([_Row|RestOfRows], RowIndex/ColumnIndex, Elem) :-
-  RowIndex > 1,
-  NewRowIndex is RowIndex - 1,
-  replaceElement(RestOfRows, NewRowIndex/ColumnIndex, Elem).
-
-
-% notrace,['nava.pl'],initial([Bo,W,B]),trace,replaceElement(Bo,1/1,[1,2,3]).
-% notrace,['nava.pl'],initial([Bo,W,B]),replaceElement(Bo,1/1,[1,2,3]).
+% notrace,['nava.pl'],initial([Bo,W,B]),trace,replaceElement(Bo,1/1,[1,2,3], NB).
+% notrace,['nava.pl'],initial([Bo,W,B]),replaceElement(Bo,1/1,[1,2,3], NB).
 
 splitStack(Board, Row/Column, NumPieces, TopSubstack, BottomSubstack) :-
   getStackFromBoard(Board, Row/Column, Stack),
