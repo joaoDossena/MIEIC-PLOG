@@ -9,10 +9,11 @@ whitePlayerTurn([OldBoard, OldWhites, OldBlacks], NewState, 'Person') :-
   getCoords(NewRow, NewColumn),
   valid_moves([OldBoard, OldWhites, OldBlacks], white, ListOfValidMoves),
   member([Row/Column, NewRow/NewColumn], ListOfValidMoves),
-  move([OldBoard, OldWhites, OldBlacks], [Row/Column, NewRow/NewColumn], NewState).
+  move([OldBoard, OldWhites, OldBlacks], [white, Row/Column, NewRow/NewColumn], NewState),
+  display_game(NewState, black).
 
 
-blackPlayerTurn([OldBoard, OldWhites, OldBlacks], _NewState, 'Person') :-
+blackPlayerTurn([OldBoard, OldWhites, OldBlacks], NewState, 'Person') :-
   nl,nl,nl,write('\n------------------ PLAYER 2 (BLACK)  -------------------\n\n'),
   display_game([OldBoard, OldWhites, OldBlacks], black),
   write('What stack do you want to move?'),nl,
@@ -22,7 +23,7 @@ blackPlayerTurn([OldBoard, OldWhites, OldBlacks], _NewState, 'Person') :-
   getCoords(NewRow, NewColumn),
   valid_moves([OldBoard, OldWhites, OldBlacks], white, ListOfValidMoves),
   member([Row/Column, NewRow/NewColumn], ListOfValidMoves),
-  move([OldBoard, OldWhites, OldBlacks], [Row/Column, NewRow/NewColumn], NewState).
+  move([OldBoard, OldWhites, OldBlacks], [black, Row/Column, NewRow/NewColumn], NewState).
 
       
 
@@ -35,37 +36,55 @@ blackPlayerTurn(Board, NewBoard, 'Computer') :-
 */
 
 % move(+GameState, +Move, -NewGameState)
-move([OldBoard, OldWhites, OldBlacks], [FromRow/FromColumn, ToRow/ToColumn], [YetANewerBoard, NewWhites, NewBlacks]) :-
+move([Board, OldWhites, OldBlacks], [Player, FromRow/FromColumn, ToRow/ToColumn], [NewestBoard, NewestWhites, NewestBlacks]) :-
+  % Gets distance, which is the number of pieces to split from stack
   getDist([FromRow/FromColumn, ToRow/ToColumn], Dist),
-  splitStack(Board, Row/Column, Dist, TopSubstack, BottomSubstack),
-  replaceStack(Board, FromRow, FromColumn, BottomSubstack, NewBoard),
-  %% nth1 get stack of casa que vai mover
-  %% append(topsubstack, stack2)
-  replaceStack(NewBoard, ToRow, ToColumn, TopSubstack, YetANewerBoard).
+  % Splits stack into leftover (bottom) and Dist # of pieces (top)
+  splitStack(Board, FromRow/FromColumn, Dist, TopSubstack, BottomSubstack),
+  % Replaces the original stack with the leftover stack
+  replaceStack(Board, FromRow/FromColumn, BottomSubstack, NewBoard),
+  getStackFromBoard(NewBoard, ToRow/ToColumn, NewStack),
+  checkForCube([NewBoard, OldWhites, OldBlacks], NewStack, YetANewerStack, [YetANewerBoard, NewWhites, NewBlacks]),
+  append(TopSubstack, YetANewerStack, NewestStack),
+  % Moves top stack to the top of ToRow/ToColumn
+  replaceStack(YetANewerBoard, ToRow/ToColumn, NewestStack, YetAnotherNewerBoard),
+  addCube([YetAnotherNewerBoard, NewWhites, NewBlacks], Player, FromRow/FromColumn, [NewestBoard, NewestWhites, NewestBlacks]).
   %% if old coords == empty, add cube there, remove from GameState
   %% return new state.
 
-%substituir um elemento numa linha e depois substituir uma linha board
 
-%replaceElem(NewElem, IndexOfElemToReplace, WhereToReplace).
+addCube([Board, WhiteCubes, _BC], white, Row/Column, [NewBoard, NewWhiteCubes, _BC]) :-
+  %% !,
+  getStackFromBoard(Board, Row/Column, []),
+  replaceStack(Board, Row/Column, [whiteCube], NewBoard),
+  NewWhiteCubes is WhiteCubes - 1.
+addCube([Board, _WC, BlackCubes], black, Row/Column, [NewBoard, _WC, NewBlackCubes]) :-
+  %% !, 
+  getStackFromBoard(Board, Row/Column, []),
+  replaceStack(Board, Row/Column, [blackCube], NewBoard),
+  NewBlackCubes is BlackCubes - 1.
 
+checkForCube([_Board, OldWhites, _OldBlacks], [whiteCube], [], [_Board, NewWhites, _NewBlacks]) :-
+  NewWhites is OldWhites + 1.
+checkForCube([_Board, _OldWhites, OldBlacks], [blackCube], [], [_Board, _NewWhites, NewBlacks]) :-
+  NewBlacks is OldBlacks + 1.
+checkForCube([Board, OldWhites, OldBlacks], Stack, Stack, [Board, OldWhites, OldBlacks]).
+
+
+% replaceElem(NewElem, IndexOfElemToReplace, WhereToReplace).
 replaceElem(_, _, [], []).
-
 replaceElem(Elem, 1, [_|T], [Elem|T1]):-
     replaceElem(_, 0, T, T1).
-    
 replaceElem(Elem, N, [H|T], [H|T1]):-
     N1 is N - 1,
     replaceElem(Elem, N1, T, T1).
 
-replaceStack(Board, RowNumber, CollumnNumber, Elem, NewBoard):-
+% replaceStack
+replaceStack(Board, RowNumber/ColumnNumber, Elem, NewBoard):-
     nth1(RowNumber, Board, Row),
-    replaceElem(Elem, CollumnNumber, Row, NewRow),
+    replaceElem(Elem, ColumnNumber, Row, NewRow),
     replaceElem(NewRow, RowNumber, Board, NewBoard).
 
-
-% notrace,['nava.pl'],initial([Bo,W,B]),trace,replaceElement(Bo,1/1,[1,2,3], NB).
-% notrace,['nava.pl'],initial([Bo,W,B]),replaceElement(Bo,1/1,[1,2,3], NB).
 
 splitStack(Board, Row/Column, NumPieces, TopSubstack, BottomSubstack) :-
   getStackFromBoard(Board, Row/Column, Stack),
@@ -127,7 +146,7 @@ gameLoop(OldState, Player1, Player2) :-
         (checkForWinner(YetANewerState, black), write('\nThanks for playing!\n'));
         (gameLoop(YetANewerState, Player1, Player2))
       )
-   )
+    )
   ).
 
 getStackFromBoard(Board, RowIndex/ColumnIndex, Stack) :-
