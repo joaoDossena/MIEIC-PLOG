@@ -1,6 +1,5 @@
-
 % Initial configuration of board
-% initialBoard(+Board)
+% initialBoard(-Board)
 initialBoard([
 	[[], [], [], [], [black, black, black, black, black, black]],
 	[[], [], [], [], []],
@@ -10,14 +9,14 @@ initialBoard([
 	]).
 
 % Initial configuration of cubes out of the board
-% initialWhiteCubes(+Number)
+% initialWhiteCubes(-Number)
 initialWhiteCubes(9).
-% initialBlackCubes(+Number)
+% initialBlackCubes(-Number)
 initialBlackCubes(9).
 
 
 % Example of intermediate configuration of board
-% midBoard(+Board)
+% midBoard(-Board)
 midBoard([
     [[black, black],        [], [blackCube],    [],               [black, black, black, black]],
     [[],               [], [],        [white, white, white], []],
@@ -27,13 +26,13 @@ midBoard([
     ]).
 
 % Example of intermediate configuration of cubes out of the board
-% midWhiteCubes(+Number)
+% midWhiteCubes(-Number)
 midWhiteCubes(8).
-% midBlackCubes(+Number)
+% midBlackCubes(-Number)
 midBlackCubes(8).
 
 % Example of final configuration of board
-% finalBoard(+Board)
+% finalBoard(-Board)
 finalBoard([
     [[blackCube], [white, black, white, black], [blackCube],    [whiteCube],           [white, black, black, black, black]],
     [[whiteCube], [whiteCube],                  [],        [white, white],        [white, black]],
@@ -43,21 +42,21 @@ finalBoard([
     ]).
 
 % Example of final configuration of cubes out of the board
-% finalWhiteCubes(+Number)
+% finalWhiteCubes(-Number)
 finalWhiteCubes(4).
-% finalBlackCubes(+Number)
+% finalBlackCubes(-Number)
 finalBlackCubes(7).
 
 % Symbols and what they represent
-% symbol(+Alias, +Character)
+% symbol(-Alias, -Character)
 symbol([], '.').
 symbol(black, 'B').
-symbol(blackCube, 'C').
+symbol(blackCube, 'bc').
 symbol(white, 'W').
-symbol(whiteCube, 'K').
+symbol(whiteCube, 'wc').
 
 % Row letters
-% letter(+Number, +Character)
+% letter(-Number, -Character)
 letter(1, 'a').
 letter(2, 'b').
 letter(3, 'c').
@@ -117,7 +116,7 @@ convertStackIntoString(Stack, String):-
 convertStackIntoString([], String, String).
 convertStackIntoString([H|T], Acc, String) :-
     symbol(H, S),
-    atom_concat(S, Acc, Acc1),
+    atom_concat(Acc, S, Acc1),
     convertStackIntoString(T, Acc1, String).
 
 % Prints number of non-used cubes

@@ -9,9 +9,7 @@ whitePlayerTurn([OldBoard, OldWhites, OldBlacks], NewState, 'Person') :-
   getCoords(NewRow, NewColumn),
   valid_moves([OldBoard, OldWhites, OldBlacks], white, ListOfValidMoves),
   member([Row/Column, NewRow/NewColumn], ListOfValidMoves),
-  move([OldBoard, OldWhites, OldBlacks], [white, Row/Column, NewRow/NewColumn], NewState),
-  display_game(NewState, black).
-
+  move([OldBoard, OldWhites, OldBlacks], [white, Row/Column, NewRow/NewColumn], NewState).
 
 blackPlayerTurn([OldBoard, OldWhites, OldBlacks], NewState, 'Person') :-
   nl,nl,nl,write('\n------------------ PLAYER 2 (BLACK)  -------------------\n\n'),
@@ -21,8 +19,9 @@ blackPlayerTurn([OldBoard, OldWhites, OldBlacks], NewState, 'Person') :-
   checkStack(OldBoard, black, Row/Column),
   write('Where to?'),nl,
   getCoords(NewRow, NewColumn),
-  valid_moves([OldBoard, OldWhites, OldBlacks], white, ListOfValidMoves),
+  valid_moves([OldBoard, OldWhites, OldBlacks], black, ListOfValidMoves),
   member([Row/Column, NewRow/NewColumn], ListOfValidMoves),
+  %% write('Before move, so far so good'),nl,
   move([OldBoard, OldWhites, OldBlacks], [black, Row/Column, NewRow/NewColumn], NewState).
 
       
@@ -44,29 +43,32 @@ move([Board, OldWhites, OldBlacks], [Player, FromRow/FromColumn, ToRow/ToColumn]
   % Replaces the original stack with the leftover stack
   replaceStack(Board, FromRow/FromColumn, BottomSubstack, NewBoard),
   getStackFromBoard(NewBoard, ToRow/ToColumn, NewStack),
+  % Checks if there's a cube on future coords
   checkForCube([NewBoard, OldWhites, OldBlacks], NewStack, YetANewerStack, [YetANewerBoard, NewWhites, NewBlacks]),
-  append(TopSubstack, YetANewerStack, NewestStack),
   % Moves top stack to the top of ToRow/ToColumn
+  append(TopSubstack, YetANewerStack, NewestStack),
   replaceStack(YetANewerBoard, ToRow/ToColumn, NewestStack, YetAnotherNewerBoard),
+  % If old coords are empty, leave a cube there
   addCube([YetAnotherNewerBoard, NewWhites, NewBlacks], Player, FromRow/FromColumn, [NewestBoard, NewestWhites, NewestBlacks]).
-  %% if old coords == empty, add cube there, remove from GameState
-  %% return new state.
 
+% initial([Bo, W, B]),addCube([Bo, W, B], black, 1/1, [NBo, NW, NB]), display_game([NBo, NW, NB], white).
+
+addCube([Board, WhiteCubes, BlackCubes], _Player, Row/Column, [Board, WhiteCubes, BlackCubes]) :-
+  getStackFromBoard(Board, Row/Column, S),
+  S \= [].
 
 addCube([Board, WhiteCubes, _BC], white, Row/Column, [NewBoard, NewWhiteCubes, _BC]) :-
-  %% !,
   getStackFromBoard(Board, Row/Column, []),
   replaceStack(Board, Row/Column, [whiteCube], NewBoard),
   NewWhiteCubes is WhiteCubes - 1.
 addCube([Board, _WC, BlackCubes], black, Row/Column, [NewBoard, _WC, NewBlackCubes]) :-
-  %% !, 
   getStackFromBoard(Board, Row/Column, []),
   replaceStack(Board, Row/Column, [blackCube], NewBoard),
   NewBlackCubes is BlackCubes - 1.
 
-checkForCube([_Board, OldWhites, _OldBlacks], [whiteCube], [], [_Board, NewWhites, _NewBlacks]) :-
+checkForCube([Board, OldWhites, OldBlacks], [whiteCube], [], [Board, NewWhites, OldBlacks]) :-
   NewWhites is OldWhites + 1.
-checkForCube([_Board, _OldWhites, OldBlacks], [blackCube], [], [_Board, _NewWhites, NewBlacks]) :-
+checkForCube([Board, OldWhites, OldBlacks], [blackCube], [], [Board, OldWhites, NewBlacks]) :-
   NewBlacks is OldBlacks + 1.
 checkForCube([Board, OldWhites, OldBlacks], Stack, Stack, [Board, OldWhites, OldBlacks]).
 
@@ -121,8 +123,7 @@ getDist([Row/Column, NewRow/Column], Dist) :-
 % Gets all valid moves possible, given a state and a player
 % valid_moves(+GameState, +Player, -ListOfMoves)
 valid_moves(GameState, Player, ListOfMoves) :-
-  between(1, 5, Row), between(1, 5, Column), between(1, 5, NewRow), between(1, 5, NewColumn),
-  bagof([Row/Column, NewRow/NewColumn], validMove(GameState, Player, Row/Column, NewRow/NewColumn), ListOfMoves).
+  findall([Row/Column, NewRow/NewColumn], (between(1, 5, Row), between(1, 5, Column), between(1, 5, NewRow), between(1, 5, NewColumn),validMove(GameState, Player, Row/Column, NewRow/NewColumn)), ListOfMoves).
 
 
 validMove([Board, _WhiteCubesLeft, _BlackCubesLeft], Player, Row/Column, NewRow/NewColumn) :-
@@ -140,10 +141,10 @@ getCoords(RowIndex, ColumnIndex) :-
 gameLoop(OldState, Player1, Player2) :-
   whitePlayerTurn(OldState, NewState, Player1),
   (
-    (checkForWinner(NewState, white), write('\nThanks for playing!\n'));
+    (checkForWinner(NewState, white), write('\nWHITE PLAYER WINS\nThanks for playing!\n'));
     (blackPlayerTurn(NewState, YetANewerState, Player2),
       (
-        (checkForWinner(YetANewerState, black), write('\nThanks for playing!\n'));
+        (checkForWinner(YetANewerState, black), write('\nBLACK PLAYER WINS\nThanks for playing!\n'));
         (gameLoop(YetANewerState, Player1, Player2))
       )
     )
@@ -154,6 +155,7 @@ getStackFromBoard(Board, RowIndex/ColumnIndex, Stack) :-
   nth1(ColumnIndex, Row, Stack).
 
 % Checks if the stack is in control of the player, returns the stack
+% checkStack(+Board, +Player, +RowIndex/+ColumnIndex, -Stack)
 checkStack(Board, white, RowIndex/ColumnIndex, Stack) :-
   getStackFromBoard(Board, RowIndex/ColumnIndex, Stack),
   whiteStack(Stack).
@@ -162,6 +164,7 @@ checkStack(Board, black, RowIndex/ColumnIndex, Stack) :-
   blackStack(Stack).
 
 % Checks if the stack is in control of the player, doesn't return the stack
+% checkStack(+Board, +Player, +RowIndex/+ColumnIndex)
 checkStack(Board, white, RowIndex/ColumnIndex) :-
   getStackFromBoard(Board, RowIndex/ColumnIndex, Stack),
   whiteStack(Stack).
@@ -169,50 +172,24 @@ checkStack(Board, black, RowIndex/ColumnIndex) :-
   getStackFromBoard(Board, RowIndex/ColumnIndex, Stack),
   blackStack(Stack).
 
-
+% Checks if top of stack is white
+% whiteStack(+Stack)
 whiteStack([TopOfStack|_RestOfStack]) :-
   TopOfStack == white.
 
+% Checks if top of stack is black
+% blackStack(+Stack)
 blackStack([TopOfStack|_RestOfStack]) :-
   TopOfStack == black.
 
-notWhiteStack([]).
-notWhiteStack([TopOfStack|_RestOfStack]) :- 
-  TopOfStack == black.
-
-noWhiteStacksOnRow([]).
-noWhiteStacksOnRow([H|T]) :-
-  notWhiteStack(H),
-  noWhiteStacksOnRow(T).
-
-noWhiteStacksOnBoard([]).
-noWhiteStacksOnBoard([Row|Rest]) :- 
-  noWhiteStacksOnRow(Row),
-  noWhiteStacksOnBoard(Rest).
-  
-
-notBlackStack([]).
-notBlackStack([TopOfStack|_RestOfStack]) :- 
-  TopOfStack == white.
-
-noBlackStacksOnRow([]).
-noBlackStacksOnRow([H|T]) :-
-  notBlackStack(H),
-  noBlackStacksOnRow(T).
-
-noBlackStacksOnBoard([]).
-noBlackStacksOnBoard([Row|Rest]) :-
-  noBlackStacksOnRow(Row),
-  noBlackStacksOnBoard(Rest).
-
-
+% Checks if player won the game
+% checkForWinner(+GameState, +Player)
 checkForWinner([_Board, 0, _BlackCubesLeft], white).
 checkForWinner([Board, _WhiteCubesLeft, _BlackCubesLeft], white) :-
-  noBlackStacksOnBoard(Board).
-
+  valid_moves([Board, _WhiteCubesLeft, _BlackCubesLeft], black, []).
 checkForWinner([_Board, _WhiteCubesLeft, 0], black).
 checkForWinner([Board, _WhiteCubesLeft, _BlackCubesLeft], black) :-
-  noWhiteStacksOnBoard(Board).
+  valid_moves([Board, _WhiteCubesLeft, _BlackCubesLeft], white, []).
   
 
 
