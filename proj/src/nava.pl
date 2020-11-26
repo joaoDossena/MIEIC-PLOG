@@ -5,9 +5,9 @@
 :- consult('computer.pl').
 :- consult('logic.pl').
 
-:- use_module(library(lists)).
-:- use_module(library(between)).
-
+:- use_module(library(lists)).   % For easier list manipulation
+:- use_module(library(between)). % For findall
+:- use_module(library(random)).  % For the stupid bot
 
 nava :-
   	mainMenu.
@@ -16,4 +16,4 @@ nava :-
 % play/0
 play :- 
 	initial(GameState),
-	gameLoop(GameState, 'Person', 'Person').
+	gameLoop(GameState, 'Person', 'Stupid bot').

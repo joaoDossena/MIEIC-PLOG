@@ -6,31 +6,25 @@ mainMenu :-
     read(Input),
     manageInput(Input).
 
-% Manages Input
-% manageInput(+Input)
+% Manages user input: starts game according to user's wishes.
+% manageInput(+Input).
 manageInput(1) :-
-    startGame('Person', 'Person'),  %player vs player
+    startGame('Person', 'Person'),
     mainMenu.
-
 manageInput(2) :-
-    startGame('Person', 'Computer'),  %player vs computer
+    startGame('Person', 'Stupid bot'),
     mainMenu.
-
 manageInput(3) :-
-    startGame('Computer', 'Computer'),  %computer vs computer
+    startGame('Computer', 'Computer'),
     mainMenu.
-
 manageInput(0) :-
     write('\nExiting...\n\n'),
     mainMenu.
-
 manageInput(_Other) :-
     write('\nERROR: that option does not exist.\n\n'),
     askMenuOption,
     read(Input),
     manageInput(Input).
-
-
 
 % Prints main menu 
 % printMainMenu/0
@@ -47,7 +41,7 @@ printMainMenu :-
     write('|                                                                       |'),nl,
     write('|                                                                       |'),nl,
     write('|                              Joao Dossena                             |'),nl,
-    write('|                              Joao Santos                              |'),nl,
+    write('|                                                                       |'),nl,
     write('|               -----------------------------------------               |'),nl,
     write('|                                                                       |'),nl,
     write('|                                                                       |'),nl,
@@ -66,4 +60,3 @@ printMainMenu :-
 % askMenuOption/0
 askMenuOption :-
     write('> Insert your option ').
-                                

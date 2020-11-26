@@ -85,3 +85,16 @@ getDist([Row/Column, Row/NewColumn], Dist) :-
 getDist([Row/Column, NewRow/Column], Dist) :-
   Dist is abs(NewRow - Row),
   Dist > 0.
+
+% Counts Player's free movable pieces.
+% countPlayerFreePieces(+Board, +Player, -Amount).
+countPlayerFreePieces(Board, Player, Amount) :-
+  findall(Length, (checkStack(Board, Player, _RowIndex/_ColumnIndex, Stack), length(Stack, Length)), AllPlayerStackSizes),
+  sumList(AllPlayerStackSizes, Amount).
+
+% Sums every value from list and returns the sum.
+% sumList(+List, -Sum).
+sumList([], 0).
+sumList([H|T], Sum) :-
+  sumList(T, TempSum),
+  Sum is TempSum + H.
