@@ -1,23 +1,35 @@
-    
+% Asks for user to input row and column.
+% getCoords(+RowIndex, +ColumnIndex).
+getCoords(RowIndex, ColumnIndex) :-
+  inputRow(RowIndex),
+  inputColumn(ColumnIndex).
+
+% Asks for user to input row and validates it.
+% inputRow(-Row).    
 inputRow(NewRow) :-
     readRow(Row),
     validateRow(Row, NewRow).
 
+% Asks for user to input column and validates it.
+% inputColumn(-Column). 
 inputColumn(NewColumn) :-
     readColumn(Column),
     validateColumn(Column, NewColumn).
 
-
+% Reads row from user.
+% readRow(-Row).
 readRow(Row) :-
     write('  > Row    \n'),
     read(Row).
 
+% Reads column from user.
+% readColumn(-Column).
 readColumn(Column) :-
     write('  > Column \n'),
     read(Column).
 
-
-% Checks if row is valid
+% Checks if row is valid.
+% validateRow(+Letter, -RowNumber).
 validateRow('a', NewRow) :-
     NewRow = 1.
 validateRow('b', NewRow) :-
@@ -29,12 +41,12 @@ validateRow('d', NewRow) :-
 validateRow('e', NewRow) :-
     NewRow = 5.
 validateRow(_Row, NewRow) :-
-    %% Row =!= 'A', Row =!= 'B', Row =!= 'C', Row =!= 'D', Row =!= 'E',
     write('ERROR: That row is not valid!\n\n'),
     readRow(Input),
     validateRow(Input, NewRow).
 
-% Checks if column is valid
+% Checks if column is valid.
+% validateColumn(+Number, -ValidatedColumnNumber).
 validateColumn(1, NewColumn) :-
     NewColumn = 1, !.
 validateColumn(2, NewColumn) :-
