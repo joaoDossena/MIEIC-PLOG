@@ -16,7 +16,8 @@ whitePlayerTurn([OldBoard, OldWhites, OldBlacks], NewState, ComputerLevel) :-
   nl,nl,nl,write('\n----------------- COMPUTER (WHITE) ------------------\n\n'),
   display_game([OldBoard, OldWhites, OldBlacks], white),
   choose_move([OldBoard, OldWhites, OldBlacks], white, ComputerLevel, Move),
-  move([OldBoard, OldWhites, OldBlacks], Move, NewState).  
+  append(white, Move, NewMove),
+  move([OldBoard, OldWhites, OldBlacks], NewMove, NewState).  
 
 % Manages the black player's turn: gets present and future coordinates, checks for validity of move, and moves.
 % Returns a NewState; Player could be 'Person' or 'Computer'
@@ -36,7 +37,8 @@ blackPlayerTurn([OldBoard, OldWhites, OldBlacks], NewState, ComputerLevel) :-
   nl,nl,nl,write('\n----------------- COMPUTER (BLACK) ------------------\n\n'),
   display_game([OldBoard, OldWhites, OldBlacks], black),
   choose_move([OldBoard, OldWhites, OldBlacks], black, ComputerLevel, Move),
-  move([OldBoard, OldWhites, OldBlacks], Move, NewState).  
+  append(black, Move, NewMove),
+  move([OldBoard, OldWhites, OldBlacks], NewMove, NewState).  
 
 % Gets distance of the movement, splits the stack, replaces the 2 stacks as needed, and deals with cubes. In other words, performs a movement.
 % move(+GameState, +Move, -NewGameState)
