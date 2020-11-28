@@ -9,17 +9,31 @@ mainMenu :-
 % Manages user input: starts game according to user's wishes.
 % manageInput(+Input).
 manageInput(1) :-
-    startGame('Person', 'Person'),
-    mainMenu.
+    !,
+    initial(GameState),
+    gameLoop(GameState, 'Person', 'Person').
 manageInput(2) :-
-    startGame('Person', 'Stupid bot'),
-    mainMenu.
+    !,
+    initial(GameState),
+    gameLoop(GameState, 'Person', 'Stupid bot').
 manageInput(3) :-
-    startGame('Computer', 'Computer'),
-    mainMenu.
+    !,
+    initial(GameState),
+    gameLoop(GameState, 'Person', 'Smarter bot').
+manageInput(4) :-
+    !,
+    initial(GameState),
+    gameLoop(GameState, 'Stupid bot', 'Stupid bot').
+manageInput(5) :-
+    !,
+    initial(GameState),
+    gameLoop(GameState, 'Stupid bot', 'Smarter bot').
+manageInput(6) :-
+    !,
+    initial(GameState),
+    gameLoop(GameState, 'Smarter bot', 'Smarter bot').
 manageInput(0) :-
-    write('\nExiting...\n\n'),
-    mainMenu.
+    write('\nExiting...\n\n').
 manageInput(_Other) :-
     write('\nERROR: that option does not exist.\n\n'),
     askMenuOption,
@@ -38,25 +52,25 @@ printMainMenu :-
     write('|                 @!    @@   m@@@!@     @@ m@     m@@@!@                |'),nl,
     write('|                                        !@!                            |'),nl,
     write('|                                                                       |'),nl,
-    write('|                                                                       |'),nl,
-    write('|                                                                       |'),nl,
     write('|                              Joao Dossena                             |'),nl,
-    write('|                                                                       |'),nl,
     write('|               -----------------------------------------               |'),nl,
     write('|                                                                       |'),nl,
+    write('|                          1. Player     vs Player                      |'),nl,
     write('|                                                                       |'),nl,
-    write('|                          1. Player   vs Player                        |'),nl,
+    write('|                          2. Player     vs Stupid bot                  |'),nl,
     write('|                                                                       |'),nl,
-    write('|                          2. Player   vs Computer                      |'),nl,
+	write('|                          3. Player     vs Smarter bot                 |'),nl,
     write('|                                                                       |'),nl,
-	write('|                          3. Computer vs Computer                      |'),nl,
+    write('|                          4. Stupid bot vs Stupid bot                  |'),nl,
+    write('|                                                                       |'),nl,
+    write('|                          5. Stupid bot vs Smarter bot                 |'),nl,
+    write('|                                                                       |'),nl,
+    write('|                          6. Smarter bot vs Smarter bot                |'),nl,
     write('|                                                                       |'),nl,
     write('|                          0. Exit                                      |'),nl,
-    write('|                                                                       |'),nl,
-    write('|                                                                       |'),nl,
     write(' _______________________________________________________________________ '),nl,nl.
 
 % Asks for menu option
 % askMenuOption/0
 askMenuOption :-
-    write('> Insert your option ').
+    write('> Insert your option'),nl.

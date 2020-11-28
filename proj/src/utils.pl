@@ -54,8 +54,10 @@ replaceStack(Board, RowNumber/ColumnNumber, Elem, NewBoard):-
 % splitStack(+Board, +RowIndex/+ColumnIndex, +NumberOfPieces, -TopSubstack, -BottomSubstack).
 splitStack(Board, Row/Column, NumPieces, TopSubstack, BottomSubstack) :-
   getStackFromBoard(Board, Row/Column, Stack),
-  getNTopPieces(Stack, NumPieces, TopSubstack),
-  removeNTopPieces(Stack, NumPieces, BottomSubstack).
+  getNTopPieces(Stack, NumPieces, TopTemp),
+  reverse(TopTemp, TopSubstack),
+  removeNTopPieces(Stack, NumPieces, BottomTemp),
+  reverse(BottomTemp, BottomSubstack).
 
 % Returns on Substack the N top pieces of Stack.
 % getNTopPieces(+Stack, +NumberOfPieces, -Substack).

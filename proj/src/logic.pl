@@ -16,7 +16,7 @@ whitePlayerTurn([OldBoard, OldWhites, OldBlacks], NewState, ComputerLevel) :-
   nl,nl,nl,write('\n----------------- COMPUTER (WHITE) ------------------\n\n'),
   display_game([OldBoard, OldWhites, OldBlacks], white),
   choose_move([OldBoard, OldWhites, OldBlacks], white, ComputerLevel, Move),
-  append(white, Move, NewMove),
+  append([white], Move, NewMove),
   move([OldBoard, OldWhites, OldBlacks], NewMove, NewState).  
 
 % Manages the black player's turn: gets present and future coordinates, checks for validity of move, and moves.
@@ -37,7 +37,7 @@ blackPlayerTurn([OldBoard, OldWhites, OldBlacks], NewState, ComputerLevel) :-
   nl,nl,nl,write('\n----------------- COMPUTER (BLACK) ------------------\n\n'),
   display_game([OldBoard, OldWhites, OldBlacks], black),
   choose_move([OldBoard, OldWhites, OldBlacks], black, ComputerLevel, Move),
-  append(black, Move, NewMove),
+  append([black], Move, NewMove),
   move([OldBoard, OldWhites, OldBlacks], NewMove, NewState).  
 
 % Gets distance of the movement, splits the stack, replaces the 2 stacks as needed, and deals with cubes. In other words, performs a movement.
@@ -101,10 +101,10 @@ validMove([Board, _WhiteCubesLeft, _BlackCubesLeft], Player, Row/Column, NewRow/
 gameLoop(OldState, Player1, Player2) :-
   whitePlayerTurn(OldState, NewState, Player1),
   (
-    (game_over(NewState, Victor),nl,write(Victor), write(' PLAYER WINS\nThanks for playing!\n'));
+    (game_over(NewState, Victor),display_game(NewState, Victor),nl,write(Victor), write(' PLAYER WINS\nThanks for playing!\n'));
     (blackPlayerTurn(NewState, YetANewerState, Player2),
       (
-        (game_over(YetANewerState, Victor),nl,write(Victor), write(' PLAYER WINS\nThanks for playing!\n'));
+        (game_over(YetANewerState, Victor),display_game(YetANewerState, Victor),nl,write(Victor), write(' PLAYER WINS\nThanks for playing!\n'));
         (gameLoop(YetANewerState, Player1, Player2))
       )
     )
