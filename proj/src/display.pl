@@ -18,8 +18,8 @@ initialBlackCubes(9).
 % Example of intermediate configuration of board
 % midBoard(-Board)
 midBoard([
-    [[black, black],        [], [blackCube],    [],               [black, black, black, black]],
-    [[],               [], [],        [white, white, white], []],
+    [[black, black],        [], [blackCube],    [],               [black, white, black, black]],
+    [[],               [], [],        [white, black, white], []],
     [[],               [], [],        [],               []],
     [[],               [], [],        [],               []],
     [[white, white, white], [], [],        [whiteCube],           []]

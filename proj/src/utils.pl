@@ -50,20 +50,22 @@ replaceStack(Board, RowNumber/ColumnNumber, Elem, NewBoard):-
     replaceElem(Elem, ColumnNumber, Row, NewRow),
     replaceElem(NewRow, RowNumber, Board, NewBoard).
 
+% intermediate([Bo, W,B]), display_game([Bo,W,B], white), trace, splitStack(Bo, 1/5, 2, Top, Bot).
+
+
 % Splits stack into 2 substacks: the top one, with NumberOfPieces pieces; and the bottom one, with the rest.
 % splitStack(+Board, +RowIndex/+ColumnIndex, +NumberOfPieces, -TopSubstack, -BottomSubstack).
 splitStack(Board, Row/Column, NumPieces, TopSubstack, BottomSubstack) :-
   getStackFromBoard(Board, Row/Column, Stack),
-  getNTopPieces(Stack, NumPieces, TopTemp),
-  reverse(TopTemp, TopSubstack),
-  removeNTopPieces(Stack, NumPieces, BottomTemp),
-  reverse(BottomTemp, BottomSubstack).
+  getNTopPieces(Stack, NumPieces, TopSubstack),
+  removeNTopPieces(Stack, NumPieces, BottomSubstack).
 
 % Returns on Substack the N top pieces of Stack.
 % getNTopPieces(+Stack, +NumberOfPieces, -Substack).
 getNTopPieces(Stack, N, Substack):-
   length(Stack, Length), Length >=  N,
-  getNTopPiecesAux(Stack, N, Substack, []).
+  getNTopPiecesAux(Stack, N, Aux, []),
+  reverse(Aux, Substack).
 getNTopPiecesAux(_Stack, 0, Substack, Substack).
 getNTopPiecesAux([H|T], N, Substack, Acc):-
   N1 is N - 1,
