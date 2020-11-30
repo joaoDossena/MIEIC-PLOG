@@ -58,7 +58,6 @@ validateColumn(4, NewColumn) :-
 validateColumn(5, NewColumn) :-
     NewColumn = 5, !.
 validateColumn(_Column, NewColumn) :-
-    %% Column =!= 1, Column =!= 2, Column =!= 3, Column =!= 4, Column =!= 5,
     write('ERROR: That column is not valid!\n\n'),
     readColumn(Input),
     validateColumn(Input, NewColumn).

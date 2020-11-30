@@ -99,7 +99,6 @@ printMatrix([Head|Tail], N) :-
 printLine([]).
 printLine([Stack|RestOfLine]) :-
     convertStackIntoString(Stack, String),
-    %% printStack(Stack),
     format('~12+~t~s~t~12+|', [String]),
     printLine(RestOfLine).
 
@@ -111,6 +110,8 @@ printStack([TopOfStack|RestOfStack]) :-
     write(S),
     printStack(RestOfStack).
 
+% Converts a stack to a string
+% convertStackIntoString(+Stack, -String).
 convertStackIntoString(Stack, String):-
     convertStackIntoString(Stack, '', String).
 convertStackIntoString([], String, String).

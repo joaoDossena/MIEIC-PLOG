@@ -1,4 +1,3 @@
-
 % Returns stack on position Row/Column on Board
 % getStackFromBoard(+Board, +RowIndex/+ColumnIndex, -Stack)
 getStackFromBoard(Board, RowIndex/ColumnIndex, Stack) :-
@@ -49,9 +48,6 @@ replaceStack(Board, RowNumber/ColumnNumber, Elem, NewBoard):-
     nth1(RowNumber, Board, Row),
     replaceElem(Elem, ColumnNumber, Row, NewRow),
     replaceElem(NewRow, RowNumber, Board, NewBoard).
-
-% intermediate([Bo, W,B]), display_game([Bo,W,B], white), trace, splitStack(Bo, 1/5, 2, Top, Bot).
-
 
 % Splits stack into 2 substacks: the top one, with NumberOfPieces pieces; and the bottom one, with the rest.
 % splitStack(+Board, +RowIndex/+ColumnIndex, +NumberOfPieces, -TopSubstack, -BottomSubstack).
