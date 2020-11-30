@@ -6,12 +6,9 @@ João Francisco Ribeiro dos Santos (UP201707427)
 Turma: 7  
 Grupo: Nava_3  
 
+Distribuição: João Dossena 100%, João Francisco 0%
+
 ## Nava
-
-
-# MUDAR OS + e os - !!!!!!!!!!!
-# FAZER FUNÇÃO DISPLAY_GAME MAIS GENÉRICA
-# MUDAR FOTOS DAS REPRESENTAÇÕES, APÓS MUDÁ-LAS
 
 ### Instruções de execução
 1. Abrir o terminal com o SICSTUS instalado
@@ -98,4 +95,30 @@ Temos também os predicados finalWhiteCubes/1 e finalBlackCubes/1, representando
 
 
 ### Visualização do estado de jogo
-O predicado play/0 chama os predicados initial(+GameState), que inicializa o tabuleiro e os números de cubos fora do tabuleiro, e display_game(-GameState, -Player), que, por sua vez, chama printBoard(-Board) e printCubes(-WhiteCubeLeft, -BlackCubeLeft). O predicado printBoard/1 imprime no ecrã o tabuleiro com o topo de cada stack ('W' para branco e 'B' para preto), bem como os cubos que estejam no tabuleiro ('K' para branco e 'C' para preto). O predicado printCubes/2 imprime no ecrã os cubos não usados.
+No início há um menu para que o usuário escolha e quer jogar contra uma pessoa, um bot fácil ou um bot mais difícil, ou se quer fazer os bots jogarem entre si.  
+
+O predicado play/0 chama os predicados initial(-GameState), que inicializa o tabuleiro e os números de cubos fora do tabuleiro, e display_game(+GameState, +Player), que, por sua vez, chama printBoard(+Board) e printCubes(+WhiteCubeLeft, +BlackCubeLeft). O predicado printBoard/1 imprime no ecrã o tabuleiro com as peças de cada stack ('W' para branco e 'B' para preto), bem como os cubos que estejam no tabuleiro ('wc' para branco e 'bc' para preto). O predicado printCubes/2 imprime no ecrã os cubos não usados.
+
+### Lista de Jogadas Válidas
+O predicado valid_moves/3 recebe um estado de jogo, um jogador, e retorna uma lista de jogadas válidas. Ele faz isso por meio de um findall, que, com betweens, gera números válidos dentro do tabuleiro para Rows e Columns. Depois, verifica se os moves seriam válidos pelo predicado validMove/4, que tem a lógica de jogo implementada. Ele só permite que se mova peças no controlo do jogador da vez, e com uma distância menor ou igual ao tamanho da pilha.
+
+### Execução de Jogadas
+Para a validação de jogadas, apenas se verifica se a jogada pretendida é member da lista de jogadas válidas. Para mover, primeiro verifica-se a distância do movimento, para saber quantas peças retirar do topo da pilha. Depois, faz-se split da pilha. É feito um replace com a subpilha inferior para atualizar o board. Se houver um cubo na casa nova pretentida, é retirado. Move-se a subpilha superior à nova casa (append), e faz-se replace novamente. No fim, verifica-se se a casa antiga ficou vazia. Caso esteja vazia, coloca-se lá um cubo.
+
+### Final do Jogo
+O predicado game_over/2 chama um predicado checkForWinner/2, que verifica se o jogador já colocou todos os seus cubos no tabuleiro, ou se capturou todas as peças inimigas. Unifica com o jogador que tiver ganho o jogo.
+
+### Avaliação do Tabuleiro
+O predicado value/3 retorna um valor para um determinado estado de jogo e jogador, composto por:
+	- Número de peças próprias livres (PPL)
+	- Número de peças inimigas livres (PIL)
+	- Número de cubos próprios restantes (CPR)
+	- Número de cubos inimigos restantes (CIR)
+
+E é calculado da seguinte forma: Value = (CPR * PPL^2)/(CIR * PIL^2 + 1). Dessa forma é possível avaliar quais jogadas são mais preferíveis.
+
+### Jogada do Computador
+O predicado choose_move/4 possui duas versões: uma para um nível com um bot fácil, e outra para um bot mais difícil. Para o bot fácil, ele apenas escolhe uma jogada aleatoriamente da lista de jogadas válidas. O bot mais inteligente avalia todas as jogadas possíveis com o predicado value/3, dá sort, reverse, e então escolhe a jogada com maior valor (primeiro elemento da lista).
+
+### Conclusões
+Um trabalho que começou como um verdadeiro desafio provou-se ser muito divertido. Tivemos que aprender uma linguagem com um paradigma completamente diferente ao que estávamos acostumados, e ainda mais desafiador foi fazer um jogo com Prolog. No início parecia impossível, mas, com o tempo foi parecendo cada vez mais fácil. A cadeira de PLOG nos fez ver a programação de forma mais abrangente. Conseguimos fazer tudo o que foi proposto, apesar de que, se houvesse mais tempo, gostaríamos de fazer um bot que verificasse não apenas as jogadas imediatas, mas que "pensasse" nas possibilidades depois de 2, 3, ou até de mais jogadas futuras (caso não fosse muito custoso computacionalmente). Resumidamente, o trabalho foi um desafio muito interessante e divertido, e gostamos do resultado do jogo que fizemos. 
