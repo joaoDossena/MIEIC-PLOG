@@ -112,10 +112,10 @@ O predicado game_over/2 chama um predicado checkForWinner/2, que verifica se o j
 
 ### Avaliação do Tabuleiro
 O predicado value/3 retorna um valor para um determinado estado de jogo e jogador, composto por:
-	- Número de peças próprias livres (PPL)
-	- Número de peças inimigas livres (PIL)
-	- Número de cubos próprios restantes (CPR)
-	- Número de cubos inimigos restantes (CIR)
+  - Número de peças próprias livres (PPL)
+  - Número de peças inimigas livres (PIL)
+  - Número de cubos próprios restantes (CPR)
+  - Número de cubos inimigos restantes (CIR)
 
 E é calculado da seguinte forma: Value = (CPR * PPL^2)/(CIR * PIL^2 + 1). Dessa forma é possível avaliar quais jogadas são mais preferíveis.
 
