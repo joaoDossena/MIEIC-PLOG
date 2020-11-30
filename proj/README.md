@@ -122,3 +122,7 @@ O predicado choose_move/4 possui duas versões: uma para um nível com um bot f�
 
 ### Conclusões
 Um trabalho que começou como um verdadeiro desafio provou-se ser muito divertido. Tivemos que aprender uma linguagem com um paradigma completamente diferente ao que estávamos acostumados, e ainda mais desafiador foi fazer um jogo com Prolog. No início parecia impossível, mas, com o tempo foi parecendo cada vez mais fácil. A cadeira de PLOG nos fez ver a programação de forma mais abrangente. Conseguimos fazer tudo o que foi proposto, apesar de que, se houvesse mais tempo, gostaríamos de fazer um bot que verificasse não apenas as jogadas imediatas, mas que "pensasse" nas possibilidades depois de 2, 3, ou até de mais jogadas futuras (caso não fosse muito custoso computacionalmente). Resumidamente, o trabalho foi um desafio muito interessante e divertido, e gostamos do resultado do jogo que fizemos. 
+
+### Referências Bibliográficas
+  - Moodle da cadeira de PLOG
+  - [SWI-Prolog manual](https://www.swi-prolog.org/pldoc/doc_for?object=manual)
