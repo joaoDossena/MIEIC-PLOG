@@ -1,4 +1,4 @@
-# Relatório Intercalar
+# Relatório Final
 ## MIEIC-PLOG
 
 João Pedro Olinto Dossena (UP201800174)  
@@ -6,7 +6,9 @@ João Francisco Ribeiro dos Santos (UP201707427)
 Turma: 7  
 Grupo: Nava_3  
 
-Distribuição: João Dossena 100%, João Francisco 0%
+Distribuição: 
+  - Primeira Entrega: João Dossena 100%, João Francisco 0%
+  - Segunda Entrega: João Dossena 100%, João Francisco 0%
 
 ## Nava
 
