@@ -18,9 +18,11 @@ solve(DiamondIndexList, NumberOfRows, NumberOfColumns, SolutionBoard) :-
 	statistics(walltime, [Start,_]),
 
 	% Decision Variables
-	length(DiamondIndexList, NumberOfDiamonds),
-	length(SolutionBoard, NumberOfRows),
-	build_cols(SolutionBoard, NumberOfColumns),
+	length(DiamondIndexList, NumberOfDiamonds), % Gets number of diamonds in problem
+	length(SolutionBoard, NumberOfRows),        % Sets numbers of rows to solution
+	build_cols(SolutionBoard, NumberOfColumns), % Sets numbers of columns to solution
+	append(SolutionBoard, Vars),                % Flattens solution
+	domain(Vars, 1, NumberOfDiamonds),          % Sets domain of each cell in solution
 
 	% Restrictions
 
