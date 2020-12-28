@@ -28,6 +28,23 @@ draw_cell(K,Vars):-
 draw_cell(_,_):-
 	write('.').
 
+draw_solve(_, [], _).
+
+draw_solve(Ncolumn, [Elem|T], Current):-
+	Current =< 1,
+	write(Elem), nl,
+	draw_solve(Ncolumn, T, Ncolumn).
+
+draw_solve(Ncolumn, [Elem|T], Current):-
+	Current > 1,
+	write(Elem), write(' '),
+	NewCurrent is Current - 1,
+	draw_solve(Ncolumn, T, NewCurrent).
+
+
+
+
+
 nth11(Y,X,LL,Elem):-
 	nth1(Y,LL,L),
 	nth1(X,L,Elem).
