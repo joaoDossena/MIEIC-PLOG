@@ -24,8 +24,10 @@ solve(DiamondIndexList, NumberOfRows, NumberOfColumns, SolutionBoard) :-
 	append(SolutionBoard, Vars),                % Flattens solution
 	domain(Vars, 1, NumberOfDiamonds),          % Sets domain of each cell in solution
 
+	List = [X, Y, BoxStart, BoxEnd],
+	domain(List, 1, Size),
 	% Restrictions
-
+	
 
 	% Labeling
 
