@@ -7,10 +7,14 @@ solve() :-
 	statistics(walltime, [Start,_]),
 
 	% Decision Variables
+	Solution = [Diamond, BoxStart, BoxEnd],
+	Diamond = [X, Y],
 
 
+	List = [X, Y, BoxStart, BoxEnd],
+	domain(List, 1, Size),
 	% Restrictions
-
+	
 
 	% Labeling
 
