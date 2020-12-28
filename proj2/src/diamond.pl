@@ -20,10 +20,8 @@ solve(DiamondIndexList, NumberOfRows, NumberOfColumns, SolutionBoard) :-
 	% Decision Variables
 	length(DiamondIndexList, NumberOfDiamonds),
 	length(SolutionBoard, NumberOfRows),
-	build_cols(SolutionBoard, NumberOfColumns),
+	build_cols(SolutionBoard, NumberOfColumns),\
 
-	List = [X, Y, BoxStart, BoxEnd],
-	domain(List, 1, Size),
 	% Restrictions
 	
 
