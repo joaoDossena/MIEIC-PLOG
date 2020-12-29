@@ -66,6 +66,9 @@ solve(DiamondIndexList, NumberOfRows, NumberOfColumns, Vars) :-
 	% Restrictions
 	all_distinct(DiamondList),
 
+	/*V1,V1,T
+
+	nth1(1+ColunmNumber, Vars, V1)*/
 
 	% all_squares(Vars),
 
