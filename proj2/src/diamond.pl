@@ -2,12 +2,41 @@
 
 :- use_module(library(clpfd)).
 :- use_module(library(lists)).
+:- use_module(library(between)).
 
 createDiamonds([], _, []).
 
 createDiamonds([Index|T], Vars, [Diamond| T1]):-
 	nth1(Index, Vars, Diamond),
 	createDiamonds(T, Vars, T1).
+
+
+getRest(_, [], _, []).
+
+getRest(DiamondIndexList, [H|T], Count, Rest):-
+	member(Count, DiamondIndexList),
+	NewCount is Count + 1,
+	getRest(DiamondIndexList, T, NewCount, Rest).
+
+getRest(DiamondIndexList, [H|T], Count, [H|Rest]):-
+	\+member(Count, DiamondIndexList),
+	NewCount is Count + 1,
+	getRest(DiamondIndexList, T, NewCount, Rest).
+
+
+count([], _, 0).
+
+count([H|T], P, Number):-
+	dif(H, P),
+	count(T, P, Number).
+
+count([H|T], H, NewNumber):-
+	count(T, H, Number),
+	NewNumber is Number + 1.
+
+
+
+
 
 % DiamondIndexList is a list with the index number of each diamond on the original problem board
 
@@ -30,23 +59,31 @@ solve(DiamondIndexList, NumberOfRows, NumberOfColumns, Vars) :-
 	append(SolutionBoard, Vars),                % Flattens solution
 	domain(Vars, 1, NumberOfDiamonds),          % Sets domain of each cell in solution
 	createDiamonds(DiamondIndexList, Vars, DiamondList),
+	getRest(DiamondIndexList, Vars, 1, Rest),
 
+	%Criar variaveis que representem os numeros 
 
 	% Restrictions
 	all_distinct(DiamondList),
 
-	getEquals(Vars, Equals),
+	/*V1,V1,T
 
-	length(Equals, N*N),
+	nth1(1+ColunmNumber, Vars, V1)*/
 
-	%TODO fazer com que todos os numeros que aparecem sejam quadrados perfeitos e no caso de serem existir pelo menos dois numeros iguais adjacentes (caso o lenght seja > 1)
+	% all_squares(Vars),
 
+	% O número de vezes que uma variavel aparece tem de ser um quadrado perfeito
 
+	% Se aparecer mais que 1 vez então tem de estar todos juntos
 
 
 
 	% Labeling
 	labeling([], Vars),
+	findall(Count, (between(1, NumberOfDiamonds, N), count(Vars, N, Count)), CountList),
+	write(Rest), nl,
+	write(CountList), nl,
+	write(Vars), nl,
 
 	% Timer ends
 	statistics(walltime, [End,_]),
