@@ -61,7 +61,7 @@ solve(DiamondIndexList, NumberOfRows, NumberOfColumns, Vars) :-
 	createDiamonds(DiamondIndexList, Vars, DiamondList),
 	getRest(DiamondIndexList, Vars, 1, Rest),
 
-	%Criar variaveis que representem os numeros 
+	%Criar variaveis que representem os numeros
 
 	% Restrictions
 	all_distinct(DiamondList),
