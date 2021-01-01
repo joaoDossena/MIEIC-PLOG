@@ -5,7 +5,7 @@ build_cols([Line|Ls],N):-
 	length(Line,N),
 	build_cols(Ls,N).
 
-draw(Y,NumberColumns, NumberRows,_):-
+draw(Y,_NumberColumns, NumberRows,_):-
 	Y > NumberRows.
 draw(Y,NumberColumns, NumberRows,Vars):-
 	Y =< NumberRows,
