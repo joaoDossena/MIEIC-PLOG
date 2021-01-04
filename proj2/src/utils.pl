@@ -58,3 +58,23 @@ nth11(Y,X,LL,Elem):-
 %% 	OneMoreDiamond is N + 1.
 %% count_diamonds([0|Tail], NumberOfDiamonds) :-
 %% 	count_diamonds(Tail, NumberOfDiamonds).
+
+puzzle :-
+	generate_random_puzzle(5, 10,10, [L, NRows, NCols]),
+	draw(1, NCols, NRows, L).
+
+
+generate_random_puzzle(NumDiamonds, MaxRows, MaxCols, [L, NRows, NCols]) :-
+	random(2, MaxRows, NRows),
+	random(2, MaxCols, NCols),
+	MaxIndex is NRows * NCols,
+	generate_random_diamonds(0, NumDiamonds, MaxIndex, [], L).
+
+
+
+generate_random_diamonds(NumDiamonds, NumDiamonds, _MaxIndex, Acc, Acc).
+generate_random_diamonds(Index, NumDiamonds, MaxIndex, Acc, List) :-
+	random(1, MaxIndex, NewDiamond),
+	append([NewDiamond], Acc, NewAcc),
+	NewIndex is Index + 1,
+	generate_random_diamonds(NewIndex, NumDiamonds, MaxIndex, NewAcc, List).
