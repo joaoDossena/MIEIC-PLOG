@@ -106,106 +106,148 @@ noMore([H|T], ElemNotToRepeat, ElemIndex, CurrIndex) :-
 %% 	check_columns(List, NColumns, Index, ElementToCheck, 0, Number, IsSquare).
 
 
+% check_cell(_List, _NRows, _NColumns, FinalIndex, FinalIndex). 
+% 	%% Index > (NRows * NColumns).
+
+% check_cell(List, NRows, NColumns, Index, FinalIndex) :-
+% %% 	%% Index =< (NRows * NColumns),
+% 	domain([IsUpperLeftCorner], 0, 1),
+% 	Index mod NColumns =\= 0,
+% 	Temp is Index // NRows + 1,
+% 	Temp < NRows,
+% 	check_upper_left_corner(List, NRows, NColumns, Index, IsUpperLeftCorner),
+% 	%% IsUpperLeftCorner =:= 1,
+% 	element(Index, List, Elem),
+% 	RightIndex is Index + 1,
+% 	element(RightIndex, List, RightElem),
+% 	BottomIndex is Index + NColumns,
+% 	element(BottomIndex, List, BottomElem),
+% 	Elem #= RightElem,
+% 	Elem #= BottomElem,
+% %% 	write('Index: '),
+% %% 	write(Index), nl,
+% %% 	% write('IsUpperLeftCorner: '),
+% %% 	% write(IsUpperLeftCorner), nl,
+% %% 	% check_square %%TODO
+% %% 	% check_square(List, NRows, NColumns, Index, IsSquare),
+% %% 	% write('IsSquare: '),
+% %% 	% write(IsSquare), nl,
+% %% 	% IsUL #=> IsSquare
+% %% 	% IsUpperLeftCorner #=> IsSquare,
+% 	NextIndex is Index + 1,
+% 	check_cell(List, NRows, NColumns, NextIndex, FinalIndex).
+
+
+% check_cell(List, NRows, NColumns, Index, FinalIndex) :- %% Not upperleft
+% %% 	%% Index < (NRows * NColumns),
+% 	domain([IsUpperLeftCorner], 0, 1),
+% 	check_upper_left_corner(List, NRows, NColumns, Index, IsUpperLeftCorner),
+% 	%% IsUpperLeftCorner =:= 0,
+% 	write('Index: '),
+% 	write(Index), nl,
+% 	NextIndex is Index + 1,
+% 	check_cell(List, NRows, NColumns, NextIndex, FinalIndex).
+
+% check_cell(List, NRows, NColumns, Index, FinalIndex) :- %%  UperLeft and 1x1 square
+% 	domain([IsUpperLeftCorner], 0, 1),
+% 	check_upper_left_corner(List, NRows, NColumns, Index, IsUpperLeftCorner),
+% 	%% IsUpperLeftCorner =:= 1,
+% 	write('Index of 1x1 square: '),
+% 	write(Index), nl,
+% 	element(Index, List, Elem),
+% 	%% write('before noMore: '),nl,
+% 	noMore(List, Elem, Index, 1),
+% 	%% write('after noMore: '),nl,
+% 	NextIndex is Index + 1,
+% 	check_cell(List, NRows, NColumns, NextIndex, FinalIndex).
 
 
 
 
 
+% count_numbers_in_row(List, NRow, NCol, OldElem, Total, Total):-
+% 	nth1(NRow, List, Row),
+% 	element(NCol, Row, Elem),
+% 	Elem #\= OldElem.
+
+count_numbers_in_row(_List, TotalColumns, _NRow, NewNCol, _Elem, 0, _NotFinished):-
+	NewNCol > TotalColumns.
+	
+
+count_numbers_in_row(List, TotalColumns, NRow, NCol, OldElem, Count, NotFinished):-
+	NCol =< TotalColumns,
+	nth1(NRow, List, Row),
+	nth1(NCol, Row, Elem),
+	Count #= CountNext + NotFinished,
+
+	NotFinishedNext #<=> NotFinished #/\ (Elem #= OldElem),
+	
+	NewNCol is NCol + 1,
+	count_numbers_in_row(List, TotalColumns, NRow, NewNCol, Elem, CountNext, NotFinishedNext).
+
+
+
+count_equal_rows(List, TotalRows, TotalColumns, NRow, NCol, _Elem, 0, Sum, _NotFinished):-
+	NRow > TotalRows.
+
+
+count_equal_rows(List, TotalRows, TotalColumns, NRow, NCol, Elem, Count, Sum, NotFinished):-
+	NRow =< TotalRows,
+	count_numbers_in_row(List, TotalColumns, NRow, NCol, Elem, RowCount, 1),
+
+	Count #= CountNext + NotFinished,
+	NotFinishedNext #<=> NotFinished #/\ (RowCount #= Sum),
+
+	NewNRow is NRow + 1,
+	count_equal_rows(List, TotalRows, TotalColumns, NewNRow, NCol, Elem, CountNext, Sum, NotFinishedNext).
 
 
 
 
+check_square(List, Index, NRows, NColumns, IsSquare):-
+	NCol is Index mod NColumns + 1,
+	NRow is Index // NRows + 1,
+	TCol \== 0,
+	NCol = TCol,
+
+	nth1(NRow, List, Row),
+	element(NCol, Row, Elem),
+
+	count_numbers_in_row(List, NColumns, NRow, NCol, Elem, Sum, 1),
+
+
+	count_equal_rows(List, NRows, NColumns, NRow, NCol, Elem, Count, Sum, 1),
+
+	Count #= Sum #<=> IsSquare.
+
+
+check_square(List, Index, NRows, NColumns, IsSquare):-
+	TCol is Index mod NColumns,
+	NRow is Index // NRows + 1,
+	TCol == 0,
+	NCol = NColumns,
+
+	nth1(NRow, List, Row),
+	element(NCol, Row, Elem),
+
+	count_numbers_in_row(List, NColumns, NRow, NCol, Elem, Sum, 1),
+
+	count_equal_rows(List, NRows, NColumns, NRow, NCol, Elem, Count, Sum, 1),
+
+	Count #= Sum #<=> IsSquare.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-check_cell(_List, _NRows, _NColumns, FinalIndex, FinalIndex). 
-	%% Index > (NRows * NColumns).
-
-check_cell(List, NRows, NColumns, Index, FinalIndex) :-
-%% 	%% Index =< (NRows * NColumns),
-	domain([IsUpperLeftCorner], 0, 1),
-	Index mod NColumns \= 0,
-	Index // NRows < (NRows - 1),
-	check_upper_left_corner(List, NRows, NColumns, Index, IsUpperLeftCorner),
-	%% IsUpperLeftCorner =:= 1,
-	element(Index, List, Elem),
-	RightIndex is Index + 1,
-	element(RightIndex, List, RightElem),
-	BottomIndex is Index + NColumns,
-	element(BottomIndex, List, BottomElem),
-	Elem #= RightElem,
-	Elem #= BottomElem,
-%% 	write('Index: '),
-%% 	write(Index), nl,
-%% 	% write('IsUpperLeftCorner: '),
-%% 	% write(IsUpperLeftCorner), nl,
-%% 	% check_square %%TODO
-%% 	% check_square(List, NRows, NColumns, Index, IsSquare),
-%% 	% write('IsSquare: '),
-%% 	% write(IsSquare), nl,
-%% 	% IsUL #=> IsSquare
-%% 	% IsUpperLeftCorner #=> IsSquare,
-	NextIndex is Index + 1,
-	check_cell(List, NRows, NColumns, NextIndex, FinalIndex).
-
-
-check_cell(List, NRows, NColumns, Index, FinalIndex) :- %% Not upperleft
-%% 	%% Index < (NRows * NColumns),
-	domain([IsUpperLeftCorner], 0, 1),
-	check_upper_left_corner(List, NRows, NColumns, Index, IsUpperLeftCorner),
-	%% IsUpperLeftCorner =:= 0,
-	write('Index: '),
-	write(Index), nl,
-	NextIndex is Index + 1,
-	check_cell(List, NRows, NColumns, NextIndex, FinalIndex).
-
-check_cell(List, NRows, NColumns, Index, FinalIndex) :- %%  UperLeft and 1x1 square
-	domain([IsUpperLeftCorner], 0, 1),
-	check_upper_left_corner(List, NRows, NColumns, Index, IsUpperLeftCorner),
-	%% IsUpperLeftCorner =:= 1,
-	write('Index of 1x1 square: '),
-	write(Index), nl,
-	element(Index, List, Elem),
-	%% write('before noMore: '),nl,
-	noMore(List, Elem, Index, 1),
-	%% write('after noMore: '),nl,
-	NextIndex is Index + 1,
-	check_cell(List, NRows, NColumns, NextIndex, FinalIndex).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+iterateBoard(FlatList, List, NRows, NColumns, Index, FinalIndex):-
+	Index =:= FinalIndex - 1.
+iterateBoard(FlatList, List, NRows, NColumns, Index, FinalIndex):-
+	% write(FinalIndex), nl,
+	% write(Index), nl,
+	check_upper_left_corner(FlatList, NRows, NColumns, Index, IsUpperLeftCorner),
+	check_square(List, Index, NRows, NColumns, IsSquare),
+	IsUpperLeftCorner #=> IsSquare,
+	NewIndex is Index + 1,
+	iterateBoard(FlatList, List, NRows, NColumns, NewIndex, FinalIndex).
 
 
 
@@ -253,7 +295,7 @@ check_upper_left_corner(_List, _NRows, _NColumns, _Index, IsUpperLeftCorner) :-
 % DiamondIndexList is a list with the index number of each diamond on the original problem board
 
 % Examples to copy & paste:
-% solve2([1, 4, 7, 18, 33, 42, 43, 47, 49], 7, 7, SolutionBoard).
+% solve([1, 4, 7, 18, 33, 42, 43, 47, 49], 7, 7, SolutionBoard).
 
 % Main function that solves puzzle
 % solve(+DiamondIndexList, +NumberOfRows, +NumberOfColumns, -SolutionBoard).
@@ -281,7 +323,10 @@ solve(DiamondIndexList, NumberOfRows, NumberOfColumns, Vars) :-
 	% trace,
 	%% write('Before checking cells'), nl,
 	FinalIndex is NumberOfRows * NumberOfColumns + 1,
-	check_cell(Vars, NumberOfRows, NumberOfColumns, 1, FinalIndex),
+	% check_cell(Vars, NumberOfRows, NumberOfColumns, 1, FinalIndex),
+	% trace,
+	iterateBoard(Vars, SolutionBoard, NumberOfRows, NumberOfColumns, 1, FinalIndex),
+	% notrace,
 	%% write('After checking cells'), nl,
 	/*V1,V1,T
 
@@ -298,16 +343,16 @@ solve(DiamondIndexList, NumberOfRows, NumberOfColumns, Vars) :-
 	% Labeling
 	labeling([], Vars),
 	% notrace,
-	findall(Count, (between(1, NumberOfDiamonds, N), count(Vars, N, Count)), CountList),
-	write(Rest), nl,
-	write(CountList), nl,
-	write(Vars), nl,
+	% findall(Count, (between(1, NumberOfDiamonds, N), count(Vars, N, Count)), CountList),
+	% write(Rest), nl,
+	% write(CountList), nl,
+	% write(Vars), nl,
 
-	% Timer ends
-	statistics(walltime, [End,_]),
-	Time is End - Start,
-    format('Duration: ~3d s~n', [Time]),
+	% % Timer ends
+	% statistics(walltime, [End,_]),
+	% Time is End - Start,
+    % format('Duration: ~3d s~n', [Time]),
 
 	
-	% Draws Problem Board
+	% % Draws Problem Board
 	draw_solve(NumberOfColumns, Vars, NumberOfColumns).
