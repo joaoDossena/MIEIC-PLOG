@@ -446,7 +446,7 @@ solve(DiamondIndexList, NumberOfRows, NumberOfColumns, Vars) :-
 	% trace,
 	iterateBoard(Vars, SolutionBoard, NumberOfRows, NumberOfColumns, 1, FinalIndex, 0, ULCount),
 
-	NumberOfDiamonds #= ULCount,
+	NumberOfDiamonds = ULCount,
 	% notrace,
 	%% write('After checking cells'), nl,
 	/*V1,V1,T
