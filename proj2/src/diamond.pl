@@ -195,8 +195,8 @@ count_equal_rows(List, TotalRows, TotalColumns, NRow, NCol, Elem, Count, Sum, No
 	NRow =< TotalRows,
 	count_numbers_in_row(List, TotalColumns, NRow, NCol, Elem, RowCount, 1),
 
-	Count #= CountNext + NotFinished,
-	NotFinishedNext #<=> NotFinished #/\ (RowCount #= Sum),
+	Count #= (CountNext + NotFinished),
+	NotFinishedNext #<=> (NotFinished #/\ (RowCount #= Sum)),
 
 	NewNRow is NRow + 1,
 	count_equal_rows(List, TotalRows, TotalColumns, NewNRow, NCol, Elem, CountNext, Sum, NotFinishedNext).
@@ -218,8 +218,9 @@ check_square(List, Index, NRows, NColumns, IsSquare):-
 
 	count_numbers_in_row(List, NColumns, NRow, NCol, Elem, Sum, 1),
 
-
+	% trace,
 	count_equal_rows(List, NRows, NColumns, NRow, NCol, Elem, Count, Sum, 1),
+	% notrace,
 
 	(Count #= Sum) #<=> IsSquare.
 
@@ -241,36 +242,28 @@ check_square(List, Index, NRows, NColumns, IsSquare):-
 
 
 
-iterateBoard(_FlatList, _List, _NRows, _NColumns, FinalIndex, FinalIndex).
-iterateBoard(FlatList, List, NRows, NColumns, Index, FinalIndex):-
+iterateBoard(_FlatList, _List, _NRows, _NColumns, Index, Index, UpperLeftCount, UpperLeftCount).
+iterateBoard(FlatList, List, NRows, NColumns, Index, FinalIndex, UpperLeftCount, TotalCount):-
 	%% write('Final Index: '), write(FinalIndex), nl,
 	write('Index: '), write(Index), nl,
 	check_upper_left_corner(FlatList, NRows, NColumns, Index, IsUpperLeftCorner),
 	%% write('Is UL? '), write(IsUpperLeftCorner),nl,
 	check_square(List, Index, NRows, NColumns, IsSquare),
 	IsUpperLeftCorner #=> IsSquare,
-
-	%% LeftIndex is Index - 1, AboveIndex is Index - NColumns,
-	%% element(Index, List, CurrentElement),
-	%% element(LeftIndex, List, LeftElement),
-	%% element(AboveIndex, List, AboveElement),
-
-	%% (#\IsUpperLeftCorner #/\ IsSquare) #=> ((CurrentElement #= LeftElement) #\/ (CurrentElement #= AboveElement)),
+	UpperLeftCountNext #= UpperLeftCount + IsUpperLeftCorner,
+	% IsSquare #<=> 1,
 	NewIndex is Index + 1,
 	%% write('New Index: '), write(NewIndex), nl,
 
-	iterateBoard(FlatList, List, NRows, NColumns, NewIndex, FinalIndex).
+	iterateBoard(FlatList, List, NRows, NColumns, NewIndex, FinalIndex, UpperLeftCountNext, TotalCount).
 
 
-
-
-
-%% check_appearance_before(_List, 1, _Element, _NeverAppeared).
-%% check_appearance_before(List, Index, Element, NeverAppeared):-
-%% 	In is Index - 1,
-%% 	element(In, List, PreviousElem),
-%% 	NeverAppearedNext #= NeverAppeared #/\ (PreviousElem #\= Element),
-%% 	check_appearance_before(List, In, Element, NeverAppeared).
+check_appearance(_List, 1, _Element, Res, Res).
+check_appearance(List, Index, Element, NeverAppeared, Res):-
+	In is Index - 1,
+	element(In, List, PreviousElem),
+	NeverAppearedNext #<=> NeverAppeared #/\ (PreviousElem #\= Element),
+	check_appearance(List, In, Element, NeverAppearedNext, Res).
 
 
 %% SE NÃO ME ENGANO FAZ SENTIDO O PRIMEIRO ELEMENTO SEMPRE SER UM UPPER LEFT CORNER
@@ -302,14 +295,14 @@ check_upper_left_corner(List, _NRows, NColumns, Index, IsUpperLeftCorner) :- %tr
 	element(RightIndex, List, RightElem),
 	BottomIndex is Index + NColumns,
 	element(BottomIndex, List, BottomElem),
-	% check_appearance_before(List, Index, Element, NeverAppeared),
-	(CurrElement #\= LeftElement) #/\ ((CurrElement #= RightElem) #<=> (CurrElement #= BottomElem)) #=> IsUpperLeftCorner. % If they have different values, then the current element is an Upper Left Corner
+	% check_appearance(List, Index, CurrElement, 1, NeverAppeared),
+	(CurrElement #\= LeftElement) #/\ ((CurrElement #= RightElem) #<=> (CurrElement #= BottomElem))  #=> IsUpperLeftCorner. % If they have different values, then the current element is an Upper Left Corner
 % In case the element is not on the first row but is in the first column
 check_upper_left_corner(List, NRows, NColumns, Index, IsUpperLeftCorner) :- %true
 	Index > NColumns,
 	%% Row is (Index // NColumns) + 1,
 	%% Row \= 1,
-	Column is Index mod NRows,
+	Column is Index mod NColumns,
 	Column == 1, % Or (Index mod NRows) == 1
 	%% write('~1st row, 1st col: '), write(Index),nl,
 	write('~1st row, 1st col'),nl,
@@ -319,19 +312,19 @@ check_upper_left_corner(List, NRows, NColumns, Index, IsUpperLeftCorner) :- %tru
 	TopIndex is Index - NColumns,
 	element(TopIndex, List, TopElement),
 	
-	% check_appearance_before(List, Index, Element, NeverAppeared),
-	(CurrElement #\= TopElement)  #=> IsUpperLeftCorner. % If they have different values, then the current element is an Upper Left Corner
+	% check_appearance(List, Index, CurrElement, 1, NeverAppeared),
+	(CurrElement #\= TopElement)  #<=> IsUpperLeftCorner. % If they have different values, then the current element is an Upper Left Corner
 
 % In case the element is neither on the first row nor is it in the first column
 check_upper_left_corner(List, NRows, NColumns, Index, IsUpperLeftCorner) :- %true
 	Index > NColumns,
 	length(List, N),
-	Index < N - NColumns,
+	Index =< N - NColumns,
 
 	%% Row is (Index // NColumns) + 1,
 	%% write('Row: '), write(Row),
 	%% Row \= 1,
-	Column is Index mod NRows,
+	Column is Index mod NColumns,
 	Column \= 1, % Or (Index mod NRows) == 1
 	%% write('Column: '), write(Column),nl,
 
@@ -348,20 +341,20 @@ check_upper_left_corner(List, NRows, NColumns, Index, IsUpperLeftCorner) :- %tru
 	BottomIndex is Index + NColumns,
 	element(BottomIndex, List, BottomElem),
 	
-	% check_appearance_before(List, Index, Element, NeverAppeared),
-	((CurrElement #\= TopElement) #/\ (CurrElement #\= LeftElement)) #/\ ((CurrElement #= RightElem) #<=> (CurrElement #= BottomElem))  #<=> IsUpperLeftCorner. % If it is different from both the top and the left, then the current element is an Upper Left Corner
+	% check_appearance(List, Index, CurrElement, 1, NeverAppeared),
+	((CurrElement #\= TopElement) #/\ (CurrElement #\= LeftElement)) #/\ ((CurrElement #= RightElem) #<=> (CurrElement #= BottomElem))  #=> IsUpperLeftCorner. % If it is different from both the top and the left, then the current element is an Upper Left Corner
 
 
 % In case the element is in the last Row
 check_upper_left_corner(List, NRows, NColumns, Index, IsUpperLeftCorner) :- %true
-	Index > NColumns,
 	length(List, N),
-	Index >= N - NColumns,
+	Index > N - NColumns,
+	Index \= N,
 
 	%% Row is (Index // NColumns) + 1,
 	%% write('Row: '), write(Row),
 	%% Row \= 1,
-	Column is Index mod NRows,
+	Column is Index mod NColumns,
 	Column \= 1, % Or (Index mod NRows) == 1
 	%% write('Column: '), write(Column),nl,
 
@@ -376,8 +369,32 @@ check_upper_left_corner(List, NRows, NColumns, Index, IsUpperLeftCorner) :- %tru
 	RightIndex is Index + 1,
 	element(RightIndex, List, RightElem),
 	
-	% check_appearance_before(List, Index, Element, NeverAppeared),
-	((CurrElement #\= TopElement) #/\ (CurrElement #\= LeftElement)) #/\ ((CurrElement #\= RightElem)) #<=> IsUpperLeftCorner. % If it is different from both the top and the left, then the current element is an Upper Left Corner
+	% check_appearance(List, Index, CurrElement, 1, NeverAppeared),
+	((CurrElement #\= TopElement) #/\ (CurrElement #\= LeftElement)) #/\ ((CurrElement #\= RightElem))  #=> IsUpperLeftCorner. % If it is different from both the top and the left, then the current element is an Upper Left Corner
+
+% In case the element is in the last Row and Last collumn
+check_upper_left_corner(List, NRows, NColumns, Index, IsUpperLeftCorner) :- %true
+	length(List, N),
+	Index == N,
+
+	%% Row is (Index // NColumns) + 1,
+	%% write('Row: '), write(Row),
+	%% Row \= 1,
+	Column is Index mod NColumns,
+	Column \= 1, % Or (Index mod NRows) == 1
+	%% write('Column: '), write(Column),nl,
+
+	%% write('~1st row, ~1st col: '), write(Index),nl,
+	write('Last row, Last col'),nl,
+
+	element(Index, List, CurrElement),
+	TopIndex is Index - NColumns,
+	element(TopIndex, List, TopElement),
+	LeftIndex is Index - 1,
+	element(LeftIndex, List, LeftElement),
+	
+	% check_appearance(List, Index, CurrElement, 1, NeverAppeared),
+	((CurrElement #\= TopElement) #/\ (CurrElement #\= LeftElement)) #=> IsUpperLeftCorner. % If it is different from both the top and the left, then the current element is an Upper Left Corner
 
 
 setDiamondOrder([]).
@@ -404,7 +421,7 @@ solve(DiamondIndexList, NumberOfRows, NumberOfColumns, Vars) :-
 	draw(1, NumberOfColumns, NumberOfRows, DiamondIndexList),
 
 	% Timer starts
-	%% statistics(walltime, [Start,_]),
+	statistics(walltime, [Start,_]),
 
 	% Decision Variables
 	length(DiamondIndexList, NumberOfDiamonds), % Gets number of diamonds in problem
@@ -426,7 +443,9 @@ solve(DiamondIndexList, NumberOfRows, NumberOfColumns, Vars) :-
 	FinalIndex is NumberOfRows * NumberOfColumns + 1,
 	% check_cell(Vars, NumberOfRows, NumberOfColumns, 1, FinalIndex),
 	% trace,
-	iterateBoard(Vars, SolutionBoard, NumberOfRows, NumberOfColumns, 1, FinalIndex),
+	iterateBoard(Vars, SolutionBoard, NumberOfRows, NumberOfColumns, 1, FinalIndex, 0, ULCount),
+
+	NumberOfDiamonds = ULCount,
 	% notrace,
 	%% write('After checking cells'), nl,
 	/*V1,V1,T
@@ -444,15 +463,15 @@ solve(DiamondIndexList, NumberOfRows, NumberOfColumns, Vars) :-
 	% Labeling
 	labeling([], Vars),
 	% notrace,
-	% findall(Count, (between(1, NumberOfDiamonds, N), count(Vars, N, Count)), CountList),
-	% write(Rest), nl,
-	% write(CountList), nl,
-	% write(Vars), nl,
+	findall(Count, (between(1, NumberOfDiamonds, N), count(Vars, N, Count)), CountList),
+	write(Rest), nl,
+	write(CountList), nl,
+	write(Vars), nl,
 
-	% % Timer ends
-	% statistics(walltime, [End,_]),
-	% Time is End - Start,
-    % format('Duration: ~3d s~n', [Time]),
+	% Timer ends
+	statistics(walltime, [End,_]),
+	Time is End - Start,
+    format('Duration: ~3d s~n', [Time]),
 
 	
 	% % Draws Problem Board
