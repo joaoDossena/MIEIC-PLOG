@@ -187,7 +187,7 @@ count_numbers_in_row(List, TotalColumns, NRow, NCol, OldElem, Count, NotFinished
 
 
 
-count_equal_rows(List, TotalRows, TotalColumns, NRow, NCol, _Elem, 0, Sum, _NotFinished):-
+count_equal_rows(_List, TotalRows, _TotalColumns, NRow, _NCol, _Elem, 0, _Sum, _NotFinished):-
 	NRow > TotalRows.
 
 
@@ -205,48 +205,54 @@ count_equal_rows(List, TotalRows, TotalColumns, NRow, NCol, Elem, Count, Sum, No
 
 
 check_square(List, Index, NRows, NColumns, IsSquare):-
-	NCol is Index mod NColumns + 1,
-	NRow is Index // NRows + 1,
-	TCol \== 0,
-	NCol = TCol,
-
-	nth1(NRow, List, Row),
-	element(NCol, Row, Elem),
-
-	count_numbers_in_row(List, NColumns, NRow, NCol, Elem, Sum, 1),
-
-
-	count_equal_rows(List, NRows, NColumns, NRow, NCol, Elem, Count, Sum, 1),
-
-	Count #= Sum #<=> IsSquare.
-
-
-check_square(List, Index, NRows, NColumns, IsSquare):-
 	TCol is Index mod NColumns,
-	NRow is Index // NRows + 1,
-	TCol == 0,
-	NCol = NColumns,
+	%% NRow is Index // NRows + 1,
+	( (Index mod NColumns > 0, NRow is Index // NColumns + 1); (NRow is Index // NColumns) ),
+
+	( (TCol > 0, NCol = TCol); (NCol = NColumns) ),
+
+	write('(Ix/Row/Col): '), write('('),write(Index),write('/'),write(NRow),write('/'),write(NCol),write(')'),nl,
 
 	nth1(NRow, List, Row),
 	element(NCol, Row, Elem),
 
 	count_numbers_in_row(List, NColumns, NRow, NCol, Elem, Sum, 1),
 
+
 	count_equal_rows(List, NRows, NColumns, NRow, NCol, Elem, Count, Sum, 1),
 
-	Count #= Sum #<=> IsSquare.
+	(Count #= Sum) #<=> IsSquare.
+
+
+%% check_square(List, Index, NRows, NColumns, IsSquare):-
+%% 	TCol is Index mod NColumns,
+%% 	NRow is Index // NRows + 1,
+%% 	TCol == 0,
+%% 	NCol = NColumns,
+
+%% 	nth1(NRow, List, Row),
+%% 	element(NCol, Row, Elem),
+
+%% 	count_numbers_in_row(List, NColumns, NRow, NCol, Elem, Sum, 1),
+
+%% 	count_equal_rows(List, NRows, NColumns, NRow, NCol, Elem, Count, Sum, 1),
+
+%% 	(Count #= Sum) #<=> IsSquare.
 
 
 
-iterateBoard(FlatList, List, NRows, NColumns, Index, FinalIndex):-
+iterateBoard(_FlatList, _List, _NRows, _NColumns, Index, FinalIndex):-
 	Index =:= FinalIndex - 1.
 iterateBoard(FlatList, List, NRows, NColumns, Index, FinalIndex):-
-	% write(FinalIndex), nl,
-	% write(Index), nl,
+	%% write('Final Index: '), write(FinalIndex), nl,
+	write('Index: '), write(Index), nl,
 	check_upper_left_corner(FlatList, NRows, NColumns, Index, IsUpperLeftCorner),
+	%% write('Is UL? '), write(IsUpperLeftCorner),nl,
 	check_square(List, Index, NRows, NColumns, IsSquare),
 	IsUpperLeftCorner #=> IsSquare,
 	NewIndex is Index + 1,
+	%% write('New Index: '), write(NewIndex), nl,
+
 	iterateBoard(FlatList, List, NRows, NColumns, NewIndex, FinalIndex).
 
 
@@ -255,47 +261,76 @@ iterateBoard(FlatList, List, NRows, NColumns, Index, FinalIndex):-
 %% SE NÃO ME ENGANO FAZ SENTIDO O PRIMEIRO ELEMENTO SEMPRE SER UM UPPER LEFT CORNER
 % In case the element is the first element, then it logically is an Upper Left Corner
 check_upper_left_corner(_List, _NRows, _NColumns, 1, IsUpperLeftCorner) :-
-	IsUpperLeftCorner #= 1. %true
+	write('Index, 1st row, 1st col: '),nl,
+	IsUpperLeftCorner #=> 1. %true
 
 % In case the element is on the first row but not in first column
 check_upper_left_corner(List, _NRows, NColumns, Index, IsUpperLeftCorner) :- %true
-	Row is Index // NColumns,
-	Row == 1, % Or (Index // NColumns) == 1
+	% Verifies Row is 1
+	Index > 1, Index =< NColumns,
+	%% Row is 1,
+	%% write('Row: '), write(Row),nl,
+	%Verifies column is not 1
+	%% write('col is ind mod ncols'),nl,
+	Column is Index mod NColumns, 
+	%% write('Col: '), write(Column),nl,
+	%% write('Ind: '), write(Index),nl,
+	%% write('Ncols: '), write(NColumns),nl,
+
+
+	Column \= 1, 
+	write('1st row, ~1st col'),nl,
 	element(Index, List, CurrElement),
 	LeftIndex is Index - 1,
 	element(LeftIndex, List, LeftElement),
-	CurrElement #\= LeftElement,
-	IsUpperLeftCorner #= 1. % If they have different values, then the current element is an Upper Left Corner
+	(CurrElement #\= LeftElement) #=> IsUpperLeftCorner. % If they have different values, then the current element is an Upper Left Corner
 % In case the element is not on the first row but is in the first column
 check_upper_left_corner(List, NRows, NColumns, Index, IsUpperLeftCorner) :- %true
+	Index > NColumns,
+	%% Row is (Index // NColumns) + 1,
+	%% Row \= 1,
 	Column is Index mod NRows,
-	Column == 1, % Or (Index mod NRows) == 1
+	Column = 1, % Or (Index mod NRows) == 1
+	%% write('~1st row, 1st col: '), write(Index),nl,
+	write('~1st row, 1st col'),nl,
+
+
 	element(Index, List, CurrElement),
 	TopIndex is Index - NColumns,
 	element(TopIndex, List, TopElement),
-	CurrElement #\= TopElement,
-	IsUpperLeftCorner #= 1. % If they have different values, then the current element is an Upper Left Corner
+	(CurrElement #\= TopElement) #=> IsUpperLeftCorner. % If they have different values, then the current element is an Upper Left Corner
 
 % In case the element is neither on the first row nor is it in the first column
-check_upper_left_corner(List, _NRows, NColumns, Index, IsUpperLeftCorner) :- %true
+check_upper_left_corner(List, NRows, NColumns, Index, IsUpperLeftCorner) :- %true
+	Index > NColumns,
+
+	%% Row is (Index // NColumns) + 1,
+	%% write('Row: '), write(Row),
+	%% Row \= 1,
+	Column is Index mod NRows,
+	Column \= 1, % Or (Index mod NRows) == 1
+	%% write('Column: '), write(Column),nl,
+
+	%% write('~1st row, ~1st col: '), write(Index),nl,
+	write('~1st row, ~1st col'),nl,
+
 	element(Index, List, CurrElement),
 	TopIndex is Index - NColumns,
 	element(TopIndex, List, TopElement),
-	CurrElement #\= TopElement,
 	LeftIndex is Index - 1,
 	element(LeftIndex, List, LeftElement),
-	CurrElement #\= LeftElement,
-	IsUpperLeftCorner #= 1. % If it is different from both the top and the left, then the current element is an Upper Left Corner
+	((CurrElement #\= TopElement) #/\ (CurrElement #\= LeftElement)) #<=> IsUpperLeftCorner. % If it is different from both the top and the left, then the current element is an Upper Left Corner
 
 %% SE NÃO ME ENGANO, ANALISEI TODOS OS CASOS VERDADEIROS
 % In the other cases it is false
-check_upper_left_corner(_List, _NRows, _NColumns, _Index, IsUpperLeftCorner) :-
-	IsUpperLeftCorner #= 0. %false
+%% check_upper_left_corner(_List, _NRows, _NColumns, _Index, IsUpperLeftCorner) :-
+%% 	IsUpperLeftCorner #=> 0. %false
 
 % DiamondIndexList is a list with the index number of each diamond on the original problem board
 
 % Examples to copy & paste:
 % solve([1, 4, 7, 18, 33, 42, 43, 47, 49], 7, 7, SolutionBoard).
+% solve([1, 7], 2, 4, S).
 
 % Main function that solves puzzle
 % solve(+DiamondIndexList, +NumberOfRows, +NumberOfColumns, -SolutionBoard).
@@ -304,7 +339,7 @@ solve(DiamondIndexList, NumberOfRows, NumberOfColumns, Vars) :-
 	draw(1, NumberOfColumns, NumberOfRows, DiamondIndexList),
 
 	% Timer starts
-	statistics(walltime, [Start,_]),
+	%% statistics(walltime, [Start,_]),
 
 	% Decision Variables
 	length(DiamondIndexList, NumberOfDiamonds), % Gets number of diamonds in problem
@@ -314,7 +349,7 @@ solve(DiamondIndexList, NumberOfRows, NumberOfColumns, Vars) :-
 	domain(Vars, 1, NumberOfDiamonds),          % Sets domain of each cell in solution
 
 	createDiamonds(DiamondIndexList, Vars, DiamondList),
-	getRest(DiamondIndexList, Vars, 1, Rest),
+	%% getRest(DiamondIndexList, Vars, 1, Rest),
 
 	%Criar variaveis que representem os numeros
 
