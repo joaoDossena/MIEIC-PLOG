@@ -249,6 +249,13 @@ iterateBoard(FlatList, List, NRows, NColumns, Index, FinalIndex):-
 	%% write('Is UL? '), write(IsUpperLeftCorner),nl,
 	check_square(List, Index, NRows, NColumns, IsSquare),
 	IsUpperLeftCorner #=> IsSquare,
+
+	%% LeftIndex is Index - 1, AboveIndex is Index - NColumns,
+	%% element(Index, List, CurrentElement),
+	%% element(LeftIndex, List, LeftElement),
+	%% element(AboveIndex, List, AboveElement),
+
+	%% (#\IsUpperLeftCorner #/\ IsSquare) #=> ((CurrentElement #= LeftElement) #\/ (CurrentElement #= AboveElement)),
 	NewIndex is Index + 1,
 	%% write('New Index: '), write(NewIndex), nl,
 
@@ -258,12 +265,12 @@ iterateBoard(FlatList, List, NRows, NColumns, Index, FinalIndex):-
 
 
 
-check_appearance_before(_List, 1, _Element, _NeverAppeared).
-check_appearance_before(List, Index, Element, NeverAppeared):-
-	In is Index - 1,
-	element(In, List, PreviousElem),
-	NeverAppearedNext #= NeverAppeared #/\ (PreviousElem #\= Element),
-	check_appearance_before(List, In, Element, NeverAppeared).
+%% check_appearance_before(_List, 1, _Element, _NeverAppeared).
+%% check_appearance_before(List, Index, Element, NeverAppeared):-
+%% 	In is Index - 1,
+%% 	element(In, List, PreviousElem),
+%% 	NeverAppearedNext #= NeverAppeared #/\ (PreviousElem #\= Element),
+%% 	check_appearance_before(List, In, Element, NeverAppeared).
 
 
 %% SE NÃO ME ENGANO FAZ SENTIDO O PRIMEIRO ELEMENTO SEMPRE SER UM UPPER LEFT CORNER
