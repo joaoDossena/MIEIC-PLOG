@@ -241,8 +241,7 @@ check_square(List, Index, NRows, NColumns, IsSquare):-
 
 
 
-iterateBoard(_FlatList, _List, _NRows, _NColumns, Index, FinalIndex):-
-	Index =:= FinalIndex - 1.
+iterateBoard(_FlatList, _List, _NRows, _NColumns, FinalIndex, FinalIndex).
 iterateBoard(FlatList, List, NRows, NColumns, Index, FinalIndex):-
 	%% write('Final Index: '), write(FinalIndex), nl,
 	write('Index: '), write(Index), nl,
