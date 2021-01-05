@@ -242,8 +242,13 @@ check_square(List, Index, NRows, NColumns, IsSquare):-
 
 
 
+<<<<<<< HEAD
 iterateBoard(_FlatList, _List, _NRows, _NColumns, Index, Index, UpperLeftCount, UpperLeftCount).
 iterateBoard(FlatList, List, NRows, NColumns, Index, FinalIndex, UpperLeftCount, TotalCount):-
+=======
+iterateBoard(_FlatList, _List, _NRows, _NColumns, FinalIndex, FinalIndex).
+iterateBoard(FlatList, List, NRows, NColumns, Index, FinalIndex):-
+>>>>>>> da58db59ed95e9547f1826bfa1b8bb61c0e8dd61
 	%% write('Final Index: '), write(FinalIndex), nl,
 	write('Index: '), write(Index), nl,
 	check_upper_left_corner(FlatList, NRows, NColumns, Index, IsUpperLeftCorner),
