@@ -258,6 +258,15 @@ iterateBoard(FlatList, List, NRows, NColumns, Index, FinalIndex):-
 
 
 
+
+check_appearance_before(_List, 1, _Element, _NeverAppeared).
+check_appearance_before(List, Index, Element, NeverAppeared):-
+	In is Index - 1,
+	element(In, List, PreviousElem),
+	NeverAppearedNext #= NeverAppeared #/\ (PreviousElem #\= Element),
+	check_appearance_before(List, In, Element, NeverAppeared).
+
+
 %% SE NÃO ME ENGANO FAZ SENTIDO O PRIMEIRO ELEMENTO SEMPRE SER UM UPPER LEFT CORNER
 % In case the element is the first element, then it logically is an Upper Left Corner
 check_upper_left_corner(_List, _NRows, _NColumns, 1, IsUpperLeftCorner) :-
@@ -283,14 +292,19 @@ check_upper_left_corner(List, _NRows, NColumns, Index, IsUpperLeftCorner) :- %tr
 	element(Index, List, CurrElement),
 	LeftIndex is Index - 1,
 	element(LeftIndex, List, LeftElement),
-	(CurrElement #\= LeftElement) #=> IsUpperLeftCorner. % If they have different values, then the current element is an Upper Left Corner
+	RightIndex is Index + 1,
+	element(RightIndex, List, RightElem),
+	BottomIndex is Index + NColumns,
+	element(BottomIndex, List, BottomElem),
+	% check_appearance_before(List, Index, Element, NeverAppeared),
+	(CurrElement #\= LeftElement) #/\ ((CurrElement #= RightElem) #<=> (CurrElement #= BottomElem)) #=> IsUpperLeftCorner. % If they have different values, then the current element is an Upper Left Corner
 % In case the element is not on the first row but is in the first column
 check_upper_left_corner(List, NRows, NColumns, Index, IsUpperLeftCorner) :- %true
 	Index > NColumns,
 	%% Row is (Index // NColumns) + 1,
 	%% Row \= 1,
 	Column is Index mod NRows,
-	Column = 1, % Or (Index mod NRows) == 1
+	Column == 1, % Or (Index mod NRows) == 1
 	%% write('~1st row, 1st col: '), write(Index),nl,
 	write('~1st row, 1st col'),nl,
 
@@ -298,11 +312,15 @@ check_upper_left_corner(List, NRows, NColumns, Index, IsUpperLeftCorner) :- %tru
 	element(Index, List, CurrElement),
 	TopIndex is Index - NColumns,
 	element(TopIndex, List, TopElement),
-	(CurrElement #\= TopElement) #=> IsUpperLeftCorner. % If they have different values, then the current element is an Upper Left Corner
+	
+	% check_appearance_before(List, Index, Element, NeverAppeared),
+	(CurrElement #\= TopElement)  #=> IsUpperLeftCorner. % If they have different values, then the current element is an Upper Left Corner
 
 % In case the element is neither on the first row nor is it in the first column
 check_upper_left_corner(List, NRows, NColumns, Index, IsUpperLeftCorner) :- %true
 	Index > NColumns,
+	length(List, N),
+	Index < N - NColumns,
 
 	%% Row is (Index // NColumns) + 1,
 	%% write('Row: '), write(Row),
@@ -319,7 +337,48 @@ check_upper_left_corner(List, NRows, NColumns, Index, IsUpperLeftCorner) :- %tru
 	element(TopIndex, List, TopElement),
 	LeftIndex is Index - 1,
 	element(LeftIndex, List, LeftElement),
-	((CurrElement #\= TopElement) #/\ (CurrElement #\= LeftElement)) #<=> IsUpperLeftCorner. % If it is different from both the top and the left, then the current element is an Upper Left Corner
+	RightIndex is Index + 1,
+	element(RightIndex, List, RightElem),
+	BottomIndex is Index + NColumns,
+	element(BottomIndex, List, BottomElem),
+	
+	% check_appearance_before(List, Index, Element, NeverAppeared),
+	((CurrElement #\= TopElement) #/\ (CurrElement #\= LeftElement)) #/\ ((CurrElement #= RightElem) #<=> (CurrElement #= BottomElem))  #<=> IsUpperLeftCorner. % If it is different from both the top and the left, then the current element is an Upper Left Corner
+
+
+% In case the element is in the last Row
+check_upper_left_corner(List, NRows, NColumns, Index, IsUpperLeftCorner) :- %true
+	Index > NColumns,
+	length(List, N),
+	Index >= N - NColumns,
+
+	%% Row is (Index // NColumns) + 1,
+	%% write('Row: '), write(Row),
+	%% Row \= 1,
+	Column is Index mod NRows,
+	Column \= 1, % Or (Index mod NRows) == 1
+	%% write('Column: '), write(Column),nl,
+
+	%% write('~1st row, ~1st col: '), write(Index),nl,
+	write('~1st row, ~1st col'),nl,
+
+	element(Index, List, CurrElement),
+	TopIndex is Index - NColumns,
+	element(TopIndex, List, TopElement),
+	LeftIndex is Index - 1,
+	element(LeftIndex, List, LeftElement),
+	RightIndex is Index + 1,
+	element(RightIndex, List, RightElem),
+	
+	% check_appearance_before(List, Index, Element, NeverAppeared),
+	((CurrElement #\= TopElement) #/\ (CurrElement #\= LeftElement)) #/\ ((CurrElement #\= RightElem)) #<=> IsUpperLeftCorner. % If it is different from both the top and the left, then the current element is an Upper Left Corner
+
+
+setDiamondOrder([]).
+setDiamondOrder([_]).
+setDiamondOrder([H, H1|T]):-
+	H1 #> H,
+	setDiamondOrder([H1|T]).
 
 %% SE NÃO ME ENGANO, ANALISEI TODOS OS CASOS VERDADEIROS
 % In the other cases it is false
@@ -329,7 +388,7 @@ check_upper_left_corner(List, NRows, NColumns, Index, IsUpperLeftCorner) :- %tru
 % DiamondIndexList is a list with the index number of each diamond on the original problem board
 
 % Examples to copy & paste:
-% solve([1, 4, 7, 18, 33, 42, 43, 47, 49], 7, 7, SolutionBoard).
+% solve([1, 4, 7, 18, 33, 42, 43, 47, 49], 7, 7, S).
 % solve([1, 7], 2, 4, S).
 
 % Main function that solves puzzle
@@ -355,6 +414,7 @@ solve(DiamondIndexList, NumberOfRows, NumberOfColumns, Vars) :-
 
 	% Restrictions
 	all_distinct(DiamondList),
+	setDiamondOrder(DiamondList),
 	% trace,
 	%% write('Before checking cells'), nl,
 	FinalIndex is NumberOfRows * NumberOfColumns + 1,
