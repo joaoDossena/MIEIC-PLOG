@@ -12,6 +12,7 @@
 %% e em Eggs os ovos utilizados.
 
 %% Answer:
+:- use_module(library(clpfd)).
 sweet_recipes(MaxTime, NEggs, RecipeTimes, RecipeEggs, Cookings, Eggs) :-
 	%% Variables
 	length(Cookings, 3),
