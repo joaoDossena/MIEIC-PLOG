@@ -49,7 +49,9 @@ order([F, S|Rest]) :-
 %% | ?- sweet_recipes(60,30,[20,50,10,20,15],[6,4,12,20,6],Cookings,Eggs).
 %% Cookings = [1,3,5],
 %% Eggs = 24
+%% no
 
 %% | ?- sweet_recipes(120,30,[20,50,10,20,15],[6,4,12,20,6],Cookings,Eggs).
 %% Cookings = [1,2,4],
 %% Eggs = 30
+%% no
